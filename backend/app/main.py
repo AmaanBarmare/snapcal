@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import health, nutrition
+from app.api import fridgescan, health, mealsnap, nutrition
 from app.db.seed import init_db
 from app.settings import get_settings
 
@@ -49,6 +49,8 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router, prefix="/api")
     app.include_router(nutrition.router, prefix="/api")
+    app.include_router(mealsnap.router, prefix="/api")
+    app.include_router(fridgescan.router, prefix="/api")
 
     @app.on_event("startup")
     def _on_start() -> None:
