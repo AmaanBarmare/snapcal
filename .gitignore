@@ -1,0 +1,65 @@
+# --- Secrets ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# --- SQLite / local DB ---
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# --- Node / Expo ---
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- iOS / Android local builds ---
+ios/Pods/
+android/.gradle/
+android/app/build/
+android/build/
+*.ipa
+*.apk
+*.aab
+
+# --- Editor / OS ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# --- Cursor / Claude / AI tooling artifacts ---
+.cursor/
+
+# --- Submission media (large binaries we link to instead) ---
+submission/demo.mp4
+submission/demo*.mov

@@ -1,0 +1,21 @@
+[project]
+name = "snapcal-backend"
+version = "0.1.0"
+description = "SnapCal FastAPI backend — Vision AI + Recipes + Swiggy MCP orchestration"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E501"]
