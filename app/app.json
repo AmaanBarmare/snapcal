@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "SnapCal",
+    "slug": "snapcal",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "snapcal",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FC8019"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.oltaflock.snapcal",
+      "infoPlist": {
+        "NSCameraUsageDescription": "SnapCal uses the camera to identify food and read your fridge contents.",
+        "NSPhotoLibraryUsageDescription": "SnapCal uses photos to identify meals from your library."
+      }
+    },
+    "android": {
+      "package": "ai.oltaflock.snapcal",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FC8019"
+      },
+      "permissions": ["CAMERA"]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "SnapCal needs camera access to identify food and your fridge contents."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
+  }
+}
