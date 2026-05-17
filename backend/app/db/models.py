@@ -6,7 +6,7 @@ Schema mirrors PRD §7 (User Data Layer) and §9 (Indian Food Database).
 from datetime import datetime
 
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.session import Base
 

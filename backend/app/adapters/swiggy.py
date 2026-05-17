@@ -17,7 +17,7 @@ from __future__ import annotations
 import logging
 import secrets
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
@@ -456,7 +456,7 @@ class SwiggyRealClient:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
 
-    def _err(self, tool: str) -> "NotImplementedError":
+    def _err(self, tool: str) -> NotImplementedError:
         return NotImplementedError(
             f"SwiggyRealClient.{tool}: pending Builders Club credentials. "
             "Configure SWIGGY_CLIENT_ID, SWIGGY_CLIENT_SECRET, and SWIGGY_MCP_BASE_URL."

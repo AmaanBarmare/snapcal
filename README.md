@@ -195,25 +195,42 @@ See [`SECURITY.md`](SECURITY.md) (added in Phase 11).
 
 ## Run the demo in 2 minutes
 
-> _Setup commands will be finalised in Phase 11. Skeleton below — the full backend and Expo client land in subsequent phases of this build._
+The entire app runs end-to-end on localhost. `USE_MOCKS=true` means no API keys required.
 
 ```bash
 # 1. Clone and configure
 git clone https://github.com/AmaanBarmare/snapcal.git
 cd snapcal
-cp .env.example .env   # USE_MOCKS=true means no API keys needed for the demo
+cp .env.example .env   # default values are demo-ready; USE_MOCKS=true
 
-# 2. Backend
+# 2. Backend — terminal 1
 cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# verify: curl http://localhost:8000/api/health  → {"status":"ok","mocks":true,...}
 
-# 3. Expo app (in a second terminal)
+# 3. Expo app — terminal 2
 cd app
 npm install
-npx expo start
-# Scan the QR with Expo Go on your phone (same WiFi as the laptop)
+# point the phone at your laptop's LAN IP (e.g. en0)
+EXPO_PUBLIC_API_URL="http://$(ipconfig getifaddr en0):8000" npx expo start
+# Scan the QR with Expo Go (same WiFi as the laptop)
+```
+
+Then on the phone: allow camera → tap **Fridge** → snap → tap **Find recipes** → pick a recipe → review the Instamart cart → tap **Place Order**. Switch to **Today** tab to see your planned meal.
+
+**Run the test suite:**
+
+```bash
+cd backend && source .venv/bin/activate && pytest -q
+# 30 tests, all green
+```
+
+**Run the type checker on the app:**
+
+```bash
+cd app && npx tsc --noEmit
 ```
 
 ---
@@ -222,9 +239,11 @@ npx expo start
 
 | | |
 |---|---|
-| Builders Club application | Drafted; awaiting demo video before submission |
-| Demo build | In progress on localhost |
-| Mock layer | Vision · Recipes · Swiggy MCP — all behind one-interface adapters, all working |
+| Builders Club application | Draft answers ready in [`submission/application-answers.md`](submission/application-answers.md); awaiting demo video before submission |
+| Demo build | **Complete end-to-end on localhost** — both modes, full dashboard, guardrailed checkout |
+| Backend test coverage | 30/30 pytest tests passing |
+| Frontend type check | clean (`tsc --noEmit`) |
+| Mock layer | Vision · Recipes · Swiggy MCP — all behind one-interface adapters |
 | Production deployment | Post-approval (Vercel + Supabase) |
 
 ---
