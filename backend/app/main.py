@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import fridgescan, health, instamart, mealsnap, nutrition
+from app.api import dashboard, fridgescan, health, instamart, mealsnap, nutrition, swiggy
 from app.db.seed import init_db
 from app.settings import get_settings
 
@@ -52,6 +52,8 @@ def create_app() -> FastAPI:
     app.include_router(mealsnap.router, prefix="/api")
     app.include_router(fridgescan.router, prefix="/api")
     app.include_router(instamart.router, prefix="/api")
+    app.include_router(swiggy.router, prefix="/api")
+    app.include_router(dashboard.router, prefix="/api")
 
     @app.on_event("startup")
     def _on_start() -> None:
