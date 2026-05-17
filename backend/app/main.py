@@ -13,7 +13,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import health
+from app.api import health, nutrition
+from app.db.seed import init_db
 from app.settings import get_settings
 
 
@@ -47,6 +48,11 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(health.router, prefix="/api")
+    app.include_router(nutrition.router, prefix="/api")
+
+    @app.on_event("startup")
+    def _on_start() -> None:
+        init_db()
 
     logging.getLogger(__name__).info(
         "SnapCal API booted — version=%s mocks=%s", __version__, settings.use_mocks
