@@ -2,7 +2,8 @@
 
 Two implementations:
 - MockVision: deterministic, hash-stable; lets the entire demo run offline.
-- OpenAIVision: real GPT-4o calls (PRD §7 primary model).
+- OpenAIVision: real GPT-5.4-mini calls (cost-effective vision model,
+  ~6x cheaper input than legacy gpt-4o while keeping full image support).
 
 Both implement `VisionAdapter`. The factory `get_vision_adapter()` chooses
 based on `USE_MOCKS`.
@@ -123,7 +124,7 @@ class MockVision:
 
 
 # ----------------------------------------------------------------------------
-# Real GPT-4o implementation
+# Real GPT-5.4-mini implementation
 # ----------------------------------------------------------------------------
 
 _MEAL_SYSTEM_PROMPT = (
@@ -147,7 +148,7 @@ _FRIDGE_SYSTEM_PROMPT = (
 
 
 class OpenAIVision:
-    """Real GPT-4o vision adapter.
+    """Real GPT-5.4-mini vision adapter.
 
     Used when USE_MOCKS=false AND OPENAI_API_KEY is set. Defensive: if the
     SDK or key is missing at runtime, we log and fall back to MockVision
@@ -178,7 +179,7 @@ class OpenAIVision:
             image_b64 if image_b64.startswith("data:") else f"data:image/jpeg;base64,{image_b64}"
         )
         resp = self._client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5.4-mini-2026-03-17",
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -190,8 +191,7 @@ class OpenAIVision:
                     ],
                 },
             ],
-            max_tokens=600,
-            temperature=0.2,
+            max_completion_tokens=600,
         )
         return json.loads(resp.choices[0].message.content or "{}")
 
@@ -199,7 +199,7 @@ class OpenAIVision:
         try:
             data = self._call(image_b64, _MEAL_SYSTEM_PROMPT)
         except Exception as exc:
-            logger.warning("GPT-4o meal call failed, falling back to mock: %s", exc)
+            logger.warning("GPT-5.4-mini meal call failed, falling back to mock: %s", exc)
             return MockVision().identify_meal(image_b64)
         out: list[DishGuess] = []
         for d in (data.get("dishes") or [])[:3]:
@@ -217,7 +217,7 @@ class OpenAIVision:
         try:
             data = self._call(image_b64, _FRIDGE_SYSTEM_PROMPT)
         except Exception as exc:
-            logger.warning("GPT-4o fridge call failed, falling back to mock: %s", exc)
+            logger.warning("GPT-5.4-mini fridge call failed, falling back to mock: %s", exc)
             return MockVision().identify_fridge_contents(image_b64)
         out: list[IngredientGuess] = []
         for it in data.get("ingredients") or []:

@@ -1,4 +1,4 @@
-"""Recipe engine adapter — Claude Sonnet 4 for production, deterministic mock for demo.
+"""Recipe engine adapter — Claude Haiku 4.5 for production, deterministic mock for demo.
 
 Both implementations satisfy the `RecipeAdapter` Protocol. Selection happens
 via `get_recipe_adapter()`.
@@ -8,12 +8,36 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from dataclasses import dataclass, field
 from typing import Protocol
 
 from app.settings import Settings, get_settings
 
 logger = logging.getLogger(__name__)
+
+
+def _extract_json(text: str) -> dict:
+    """Tolerantly parse JSON from a Claude response.
+
+    Haiku 4.5 often wraps output in ```json ... ``` fences; older Sonnet
+    snapshots returned bare JSON. We strip fences and fall back to a
+    greedy `{...}` slice so the recipe pipeline doesn't trip on either.
+    """
+    if not text:
+        return {}
+    s = text.strip()
+    m = re.search(r"```(?:json)?\s*(.+?)```", s, re.DOTALL | re.IGNORECASE)
+    if m:
+        s = m.group(1).strip()
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        start = s.find("{")
+        end = s.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            return json.loads(s[start : end + 1])
+        raise
 
 
 @dataclass(frozen=True)
@@ -289,7 +313,7 @@ class MockRecipes:
 
 
 # ----------------------------------------------------------------------------
-# Real Claude Sonnet 4 implementation
+# Real Claude Haiku 4.5 implementation
 # ----------------------------------------------------------------------------
 
 _RECIPE_SYSTEM_PROMPT = (
@@ -322,7 +346,7 @@ class ClaudeRecipes:
         user_msg = f"Available ingredients: {', '.join(ingredients) or '(none)'}"
         try:
             resp = self._client.messages.create(
-                model="claude-sonnet-4-20250514",
+                model="claude-haiku-4-5-20251001",
                 max_tokens=1500,
                 system=_RECIPE_SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": user_msg}],
@@ -331,7 +355,7 @@ class ClaudeRecipes:
             for block in resp.content:
                 if getattr(block, "type", None) == "text":
                     text += block.text
-            data = json.loads(text)
+            data = _extract_json(text)
         except Exception as exc:
             logger.warning("Claude recipe call failed, falling back to mock: %s", exc)
             return MockRecipes().suggest_recipes(ingredients)

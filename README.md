@@ -16,7 +16,7 @@ Hi — thanks for reading. If you're reviewing this for the [Swiggy Builders Clu
 
 **Who:** Oltaflock — building consumer products for urban Indian users. Contact: `amaan@oltaflock.ai`.
 
-**What we're building:** SnapCal is a native mobile app (Expo + React Native) that uses GPT-4o vision and Claude Sonnet to turn the phone camera into a food intelligence layer for Indian users. It sits between the user's kitchen and Swiggy's commerce infrastructure.
+**What we're building:** SnapCal is a native mobile app (Expo + React Native) that uses GPT-5.4-mini vision and Claude Haiku 4.5 to turn the phone camera into a food intelligence layer for Indian users. It sits between the user's kitchen and Swiggy's commerce infrastructure.
 
 **Why we're applying:** SnapCal is structurally dependent on Swiggy. Mode 1 (FridgeScan → order missing ingredients) is only viable on Instamart's 10-minute logistics network across 131 Indian cities. Mode 2's standout feature — grounding Indian nutrition estimates in real restaurant menu data — only works against the Swiggy Food MCP's `search_menu` because that's where India's restaurant menus actually live.
 
@@ -44,7 +44,7 @@ SnapCal fills the gap between the kitchen, nutrition tracking, and Swiggy's comm
 
 | Mode | Entry | What it does |
 |---|---|---|
-| **1 — FridgeScan** | Toggle: Fridge | Snap fridge interior → GPT-4o detects ingredients → Claude Sonnet returns 3 Indian recipes ranked by fewest missing ingredients → tap a recipe → Instamart cart auto-built for missing items → confirmation screen → `checkout` |
+| **1 — FridgeScan** | Toggle: Fridge | Snap fridge interior → GPT-5.4-mini detects ingredients → Claude Haiku 4.5 returns 3 Indian recipes ranked by fewest missing ingredients → tap a recipe → Instamart cart auto-built for missing items → confirmation screen → `checkout` |
 | **2 — Meal Snap** | Toggle: Meal (default) | Snap any meal → Vision AI identifies the Indian dish + serving size → India-accurate calories + macros from our internal Indian Food DB (or `search_menu` cross-reference if it's a Swiggy order) → "Log this meal" |
 | **3 — Today** | Today tab | Daily calorie ring + protein/carbs/fat rings + chronological meal log, all auto-populated from Modes 1 and 2. No manual entry anywhere. |
 
@@ -77,7 +77,7 @@ Instamart is the only service that can deliver the _exact_ missing ingredient fo
 sequenceDiagram
     participant App as Expo App
     participant BE as FastAPI Backend
-    participant Vis as GPT-4o Vision
+    participant Vis as GPT-5.4-mini Vision
     participant Rec as Claude Sonnet
     participant Inst as Swiggy Instamart MCP
 
@@ -104,7 +104,7 @@ sequenceDiagram
 sequenceDiagram
     participant App as Expo App
     participant BE as FastAPI Backend
-    participant Vis as GPT-4o Vision
+    participant Vis as GPT-5.4-mini Vision
     participant Food as Swiggy Food MCP
 
     App->>BE: POST /api/mealsnap (image)
@@ -140,8 +140,8 @@ Both sequences mirror PRD §8 exactly.
 flowchart TD
     Phone["Phone (Expo Go)<br/>expo-camera · Zustand · victory-native"]
     BE["FastAPI Backend (Python 3.12)<br/>/api/mealsnap · /api/fridgescan · /api/recipes<br/>/api/instamart · /api/swiggy · /api/dashboard"]
-    Vis["GPT-4o Vision<br/>(mock | real)"]
-    Rec["Claude Sonnet 4 Recipes<br/>(mock | real)"]
+    Vis["GPT-5.4-mini Vision<br/>(mock | real)"]
+    Rec["Claude Haiku 4.5 Recipes<br/>(mock | real)"]
     MCP["Swiggy MCP<br/>Instamart + Food<br/>(mock | real)"]
     DB[("SQLite<br/>Indian food DB · meal logs<br/>fridge scans · users")]
 
@@ -152,7 +152,7 @@ flowchart TD
     BE --> DB
 ```
 
-**Why this stack:** Expo gives full native camera hardware access via `expo-camera` (browser `getUserMedia` cannot match it) and lets the demo run on a real phone in under 2 minutes via Expo Go. FastAPI is the most ergonomic Python framework for async LLM orchestration. GPT-4o is currently the best vision model for cluttered fridge interiors and complex Indian thalis. Claude Sonnet 4 is best-in-class for structured JSON output and has strong Indian cuisine knowledge in our internal evals. Full rationale in [`docs/snapcal-prd.md`](docs/snapcal-prd.md) §7.
+**Why this stack:** Expo gives full native camera hardware access via `expo-camera` (browser `getUserMedia` cannot match it) and lets the demo run on a real phone in under 2 minutes via Expo Go. FastAPI is the most ergonomic Python framework for async LLM orchestration. GPT-5.4-mini gives strong vision quality on cluttered fridge interiors and complex Indian thalis at ~6× lower input cost than the legacy GPT-4o we initially scoped against. Claude Haiku 4.5 is best-in-class price/performance for structured JSON output and has strong Indian cuisine knowledge in our internal evals. Full rationale in [`docs/snapcal-prd.md`](docs/snapcal-prd.md) §7.
 
 See [`docs/architecture.md`](docs/architecture.md) for the deep version.
 
@@ -186,10 +186,10 @@ See [`SECURITY.md`](SECURITY.md) (added in Phase 11).
 | Production hosting | Vercel (post-approval) | FastAPI serverless |
 | Database (demo) | SQLite | Zero-setup, swap-ready to Supabase |
 | Database (prod) | Supabase | PostgreSQL + Auth + Storage |
-| Vision (primary) | GPT-4o | Highest accuracy on cluttered fridges + complex thalis |
+| Vision (primary) | GPT-5.4-mini | Strong accuracy on cluttered fridges + complex thalis at ~6× lower input cost than GPT-4o |
 | Vision (fallback) | Gemini 2.0 Flash | 10× cheaper, post-launch cost optimisation |
-| Recipes | Claude Sonnet 4 | Best structured JSON + Indian cuisine knowledge |
-| Nutrition | Claude Sonnet 4 | Estimation for dishes outside the internal DB |
+| Recipes | Claude Haiku 4.5 | Near-frontier structured JSON + Indian cuisine knowledge at Haiku price ($1 / $5 per 1M tok) |
+| Nutrition | Claude Haiku 4.5 | Estimation for dishes outside the internal DB |
 
 ---
 

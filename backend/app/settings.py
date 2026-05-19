@@ -2,7 +2,7 @@
 
 Every external dependency in SnapCal has a mock implementation behind the
 same interface. The single switch that toggles the entire app between
-"runs offline with no keys" and "calls real GPT-4o / Claude / Swiggy MCP"
+"runs offline with no keys" and "calls real GPT-5.4-mini / Claude Haiku / Swiggy MCP"
 is `USE_MOCKS`. Default: true (demo-friendly).
 """
 
@@ -27,7 +27,6 @@ class Settings(BaseSettings):
 
     openai_api_key: str = Field(default="")
     anthropic_api_key: str = Field(default="")
-    gemini_api_key: str = Field(default="")
 
     supabase_url: str = Field(default="")
     supabase_anon_key: str = Field(default="")

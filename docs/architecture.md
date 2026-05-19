@@ -29,8 +29,8 @@ flowchart TB
     end
 
     subgraph Adapters
-        VA["VisionAdapter<br/>Mock | GPT-4o"]
-        RA["RecipeAdapter<br/>Mock | Claude Sonnet 4"]
+        VA["VisionAdapter<br/>Mock | GPT-5.4-mini"]
+        RA["RecipeAdapter<br/>Mock | Claude Haiku 4.5"]
         SW["SwiggyClient<br/>Mock | Real MCP"]
     end
 
@@ -83,8 +83,8 @@ snapcal/
 │   │   │   ├── gap_analyzer.py      ← missing-ingredients → cart, brand-aware
 │   │   │   └── targets.py           ← 3-question → daily calorie/macro targets
 │   │   ├── adapters/
-│   │   │   ├── vision.py            ← VisionAdapter Protocol + Mock + OpenAI GPT-4o
-│   │   │   ├── recipes.py           ← RecipeAdapter + Mock + Claude Sonnet 4
+│   │   │   ├── vision.py            ← VisionAdapter Protocol + Mock + OpenAI GPT-5.4-mini
+│   │   │   ├── recipes.py           ← RecipeAdapter + Mock + Claude Haiku 4.5
 │   │   │   └── swiggy.py            ← SwiggyClient + MockSwiggy + SwiggyRealClient stub
 │   │   ├── db/
 │   │   │   ├── session.py           ← SQLAlchemy engine + sessionmaker

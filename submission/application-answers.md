@@ -36,7 +36,7 @@ Copy-paste-ready answers for the [Swiggy Builders Club Developer Application for
 
 ### Tech stack & architecture overview
 
-> Expo (React Native, expo-camera) mobile client → FastAPI (Python 3.12) backend orchestrating GPT-4o for vision, Claude Sonnet 4 for the Indian recipe engine, and the Swiggy MCP for Instamart (`search_products`, `your_go_to_items`, `update_cart`, `checkout`) and Food (`get_orders`, `search_menu`). SQLite for the demo, Supabase swap-ready behind a repository interface. Mock and real adapters share one interface (`SwiggyClient`, `VisionAdapter`, `RecipeAdapter`), so the demo runs end-to-end on localhost today with `USE_MOCKS=true` and flips to the live MCP the moment Builders Club credentials arrive. Checkout is structurally gated by a server-issued single-use confirmation token — no auto-orders possible, ₹1000 cart cap enforced as a backend exception, not just a UI guard.
+> Expo (React Native, expo-camera) mobile client → FastAPI (Python 3.12) backend orchestrating GPT-5.4-mini for vision, Claude Haiku 4.5 for the Indian recipe engine, and the Swiggy MCP for Instamart (`search_products`, `your_go_to_items`, `update_cart`, `checkout`) and Food (`get_orders`, `search_menu`). SQLite for the demo, Supabase swap-ready behind a repository interface. Mock and real adapters share one interface (`SwiggyClient`, `VisionAdapter`, `RecipeAdapter`), so the demo runs end-to-end on localhost today with `USE_MOCKS=true` and flips to the live MCP the moment Builders Club credentials arrive. Checkout is structurally gated by a server-issued single-use confirmation token — no auto-orders possible, ₹1000 cart cap enforced as a backend exception, not just a UI guard.
 
 ### Redirect URI(s) for auth flows
 
