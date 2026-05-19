@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import AppHeader from "@/components/AppHeader";
+import Card from "@/components/Card";
 import { getHistory } from "@/lib/api";
-import { colors, radius, shadow, spacing } from "@/lib/theme";
+import { colors, spacing, type } from "@/lib/theme";
 
 interface Item {
   id: number;
@@ -45,8 +47,8 @@ export default function HistoryScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.center}>
-        <ActivityIndicator />
+      <SafeAreaView style={styles.center} edges={["top"]}>
+        <ActivityIndicator color={colors.primaryContainer} />
       </SafeAreaView>
     );
   }
@@ -63,24 +65,27 @@ export default function HistoryScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={["top"]}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: spacing.xxl }}>
-        <Text style={styles.title}>History</Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <AppHeader />
+      <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.subtitle}>Last 14 days</Text>
 
         {items.length === 0 ? (
-          <View style={[styles.card, styles.empty]}>
+          <Card style={styles.empty}>
             <Text style={styles.emptyTitle}>No meals yet</Text>
             <Text style={styles.emptyBody}>
               Snap meals on the Snap tab and they'll appear here.
             </Text>
-          </View>
+          </Card>
         ) : (
           Object.entries(grouped).map(([day, list]) => (
             <View key={day} style={{ marginTop: spacing.lg }}>
               <Text style={styles.day}>{day}</Text>
               {list.map((m) => (
-                <View key={m.id} style={styles.card}>
+                <Card key={m.id} style={styles.mealCard}>
+                  <View style={styles.mealThumb}>
+                    <Text style={{ fontSize: 24 }}>🍽</Text>
+                  </View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.dish}>{m.dishName}</Text>
                     <Text style={styles.meta}>
@@ -97,7 +102,7 @@ export default function HistoryScreen() {
                     <Text style={styles.kcal}>{Math.round(m.calories)}</Text>
                     <Text style={styles.kcalLabel}>kcal</Text>
                   </View>
-                </View>
+                </Card>
               ))}
             </View>
           ))
@@ -108,75 +113,77 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   center: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
+  scroll: {
+    paddingHorizontal: spacing.gridMargin,
+    paddingBottom: 120,
   },
   subtitle: {
-    fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 2,
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.sm,
+    marginBottom: spacing.lg,
   },
   day: {
-    fontSize: 12,
-    fontWeight: "800",
-    color: colors.textMuted,
-    letterSpacing: 1,
-    textTransform: "uppercase",
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
     marginBottom: spacing.sm,
   },
-  card: {
-    backgroundColor: colors.bgElevated,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
+  mealCard: {
     flexDirection: "row",
     alignItems: "center",
-    ...shadow.card,
+    gap: spacing.md,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  mealThumb: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: colors.surfaceContainerLow,
+    alignItems: "center",
+    justifyContent: "center",
   },
   dish: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.text,
+    ...type.headlineMd,
+    fontSize: 16,
+    color: colors.onSurface,
   },
   meta: {
+    ...type.bodyMd,
     fontSize: 12,
-    color: colors.textMuted,
+    color: colors.onSurfaceVariant,
     marginTop: 2,
   },
   kcal: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: colors.text,
+    ...type.macroNumber,
+    color: colors.primaryContainer,
   },
   kcalLabel: {
-    fontSize: 11,
-    color: colors.textMuted,
+    ...type.labelCaps,
+    fontSize: 10,
+    color: colors.onSurfaceVariant,
   },
-
   empty: {
-    backgroundColor: colors.bgElevated,
-    borderRadius: radius.lg,
-    padding: spacing.xl,
     alignItems: "center",
-    marginTop: spacing.lg,
-    ...shadow.card,
+    paddingVertical: spacing.xxl,
   },
   emptyTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.text,
+    ...type.headlineMd,
+    color: colors.onSurface,
   },
   emptyBody: {
-    fontSize: 14,
-    color: colors.textMuted,
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     textAlign: "center",
     marginTop: spacing.sm,
   },

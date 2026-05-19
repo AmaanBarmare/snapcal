@@ -10,9 +10,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import AppHeader from "@/components/AppHeader";
+import Card from "@/components/Card";
 import PoweredBySwiggy from "@/components/PoweredBySwiggy";
 import { Recipe, buildInstamartCart } from "@/lib/api";
-import { colors, radius, shadow, spacing } from "@/lib/theme";
+import { colors, radius, spacing, type } from "@/lib/theme";
 
 export default function RecipesScreen() {
   const params = useLocalSearchParams<{ ingredients?: string; recipes?: string }>();
@@ -26,11 +28,11 @@ export default function RecipesScreen() {
 
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState(0);
 
   async function chooseRecipe(r: Recipe) {
     if (busy) return;
     if (r.missing_count === 0) {
-      // nothing to order — head straight to "let's cook" by logging planned meal
       router.push({
         pathname: "/result/instamart",
         params: {
@@ -73,143 +75,178 @@ export default function RecipesScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: spacing.xxl }}>
-        <Text style={styles.cap}>3 RECIPES YOU CAN MAKE</Text>
-        <Text style={styles.title}>Ranked by fewest missing</Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <AppHeader />
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <Text style={styles.title}>Recipes for you</Text>
+        <Text style={styles.subtitle}>Based on your recent snaps and pantry.</Text>
 
-        <View style={{ alignItems: "flex-start", marginTop: spacing.sm }}>
+        <View style={{ alignSelf: "flex-start", marginVertical: spacing.md }}>
           <PoweredBySwiggy compact />
         </View>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        {recipes.map((r) => (
-          <Pressable
-            key={r.name_english}
-            disabled={!!busy}
-            onPress={() => chooseRecipe(r)}
-            style={({ pressed }) => [
-              styles.card,
-              pressed && !busy && { opacity: 0.9 },
-              busy === r.name_english && { opacity: 0.6 },
-            ]}
-          >
-            <View style={styles.cardHead}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.dish}>{r.name_english}</Text>
-                {r.name_hindi ? <Text style={styles.dishHi}>{r.name_hindi}</Text> : null}
-              </View>
-              <View style={styles.kcalBlock}>
-                <Text style={styles.kcal}>{r.calories_per_serving}</Text>
-                <Text style={styles.kcalLabel}>kcal</Text>
-              </View>
-            </View>
+        {recipes.map((r, idx) => {
+          const isSelected = idx === selected;
+          return (
+            <Pressable
+              key={r.name_english}
+              disabled={!!busy}
+              onPress={() => {
+                setSelected(idx);
+                chooseRecipe(r);
+              }}
+              style={({ pressed }) => [pressed && !busy && { opacity: 0.92 }]}
+            >
+              <Card
+                style={[
+                  styles.recipeCard,
+                  isSelected && styles.recipeCardSelected,
+                  busy === r.name_english && { opacity: 0.6 },
+                ]}
+              >
+                {idx === 0 ? (
+                  <View style={styles.bestBadge}>
+                    <Text style={styles.bestBadgeText}>BEST MATCH</Text>
+                  </View>
+                ) : null}
 
-            <View style={styles.metaRow}>
-              <Meta icon="◔" label={`${r.cook_time_minutes} min`} />
-              <Meta icon="◆" label={r.difficulty} />
-              <Meta icon="◉" label={`${Math.round(r.protein_per_serving_g)}g protein`} color={colors.ringProtein} />
-            </View>
-
-            <View style={styles.ingBlock}>
-              <Text style={styles.ingHead}>You have</Text>
-              <Text style={styles.ingAvail}>
-                {r.ingredients_available.length > 0
-                  ? r.ingredients_available.map((i) => i.name).join(" · ")
-                  : "—"}
-              </Text>
-            </View>
-
-            {r.ingredients_missing.length > 0 ? (
-              <View style={styles.ingBlock}>
-                <View style={styles.missHead}>
-                  <Text style={styles.ingHead}>You'll need</Text>
-                  <View style={styles.missBadge}>
-                    <Text style={styles.missBadgeText}>{r.missing_count} from Instamart</Text>
+                <View style={styles.cardHead}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.dish}>{r.name_english}</Text>
+                    {r.name_hindi ? <Text style={styles.dishHi}>{r.name_hindi}</Text> : null}
+                  </View>
+                  <View style={styles.kcalBlock}>
+                    <Text style={styles.kcal}>{r.calories_per_serving}</Text>
+                    <Text style={styles.kcalLabel}>kcal</Text>
                   </View>
                 </View>
-                <Text style={styles.ingMiss}>
-                  {r.ingredients_missing.map((i) => i.name).join(" · ")}
-                </Text>
-              </View>
-            ) : (
-              <View style={styles.ingBlock}>
-                <Text style={styles.ingAllSet}>Everything you need is in your fridge ✓</Text>
-              </View>
-            )}
 
-            <View style={styles.cardFoot}>
-              <Text style={styles.cardFootText}>
-                {r.missing_count === 0 ? "Tap to cook" : "Tap to order missing ingredients"}
-              </Text>
-              <Text style={styles.cardFootArrow}>→</Text>
-            </View>
+                <View style={styles.metaRow}>
+                  <Meta label={`${r.cook_time_minutes} min`} />
+                  <Meta label={r.difficulty} />
+                  <Meta label={`${Math.round(r.protein_per_serving_g)}g protein`} accent />
+                </View>
 
-            {busy === r.name_english ? (
-              <View style={styles.cardOverlay}>
-                <ActivityIndicator color="#fff" />
-                <Text style={{ color: "#fff", marginTop: spacing.sm, fontWeight: "700" }}>
-                  Building Instamart cart…
-                </Text>
-              </View>
-            ) : null}
-          </Pressable>
-        ))}
+                <View style={styles.ingBlock}>
+                  <Text style={styles.ingHead}>You have</Text>
+                  <Text style={styles.ingAvail}>
+                    {r.ingredients_available.length > 0
+                      ? r.ingredients_available.map((i) => i.name).join(" · ")
+                      : "—"}
+                  </Text>
+                </View>
+
+                {r.ingredients_missing.length > 0 ? (
+                  <View style={styles.ingBlock}>
+                    <View style={styles.missHead}>
+                      <Text style={styles.ingHead}>You'll need</Text>
+                      <View style={styles.missBadge}>
+                        <Text style={styles.missBadgeText}>
+                          {r.missing_count} from Instamart
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.ingMiss}>
+                      {r.ingredients_missing.map((i) => i.name).join(" · ")}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.ingAllSet}>Everything is in your fridge ✓</Text>
+                )}
+
+                <View style={styles.cardFoot}>
+                  <Text style={styles.cardFootText}>
+                    {r.missing_count === 0 ? "Tap to cook" : "Tap to order missing ingredients"}
+                  </Text>
+                  <Text style={styles.cardFootArrow}>→</Text>
+                </View>
+
+                {busy === r.name_english ? (
+                  <View style={styles.cardOverlay}>
+                    <ActivityIndicator color={colors.onPrimary} />
+                    <Text style={styles.overlayText}>Building Instamart cart…</Text>
+                  </View>
+                ) : null}
+              </Card>
+            </Pressable>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function Meta({ icon, label, color }: { icon: string; label: string; color?: string }) {
+function Meta({ label, accent }: { label: string; accent?: boolean }) {
   return (
-    <View style={styles.meta}>
-      <Text style={[styles.metaIcon, color && { color }]}>{icon}</Text>
-      <Text style={[styles.metaLabel, color && { color }]}>{label}</Text>
-    </View>
+    <Text style={[styles.metaLabel, accent && { color: colors.ringProtein }]}>
+      {label}
+    </Text>
   );
 }
 
 const styles = StyleSheet.create({
-  cap: {
-    fontSize: 11,
-    color: colors.textMuted,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scroll: {
+    paddingHorizontal: spacing.gridMargin,
+    paddingBottom: spacing.xxl,
   },
   title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
+    ...type.headlineLg,
+    color: colors.onSurface,
+    marginTop: spacing.md,
+  },
+  subtitle: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginTop: spacing.xs,
   },
   error: {
-    color: colors.danger,
+    color: colors.error,
+    ...type.bodyMd,
     fontWeight: "600",
     marginTop: spacing.md,
   },
-
-  card: {
-    backgroundColor: colors.bgElevated,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginTop: spacing.lg,
-    ...shadow.card,
+  recipeCard: {
+    marginBottom: spacing.lg,
+    overflow: "hidden",
+  },
+  recipeCardSelected: {
+    borderWidth: 2,
+    borderColor: colors.primaryContainer,
+  },
+  bestBadge: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: colors.primaryContainer,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderBottomLeftRadius: radius.lg,
+    borderTopRightRadius: radius.card - 2,
+    zIndex: 1,
+  },
+  bestBadgeText: {
+    ...type.labelCaps,
+    color: colors.onPrimary,
+    fontSize: 10,
   },
   cardHead: {
     flexDirection: "row",
     alignItems: "flex-start",
+    marginTop: spacing.sm,
   },
   dish: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: colors.text,
+    ...type.headlineMd,
+    color: colors.onSurface,
   },
   dishHi: {
-    fontSize: 16,
-    color: colors.textMuted,
-    fontWeight: "600",
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginTop: 2,
   },
   kcalBlock: {
@@ -217,86 +254,67 @@ const styles = StyleSheet.create({
     marginLeft: spacing.md,
   },
   kcal: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
-    lineHeight: 28,
+    ...type.macroNumber,
+    fontSize: 22,
+    color: colors.onSurface,
   },
   kcalLabel: {
-    fontSize: 11,
-    color: colors.textMuted,
-    fontWeight: "600",
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
+    fontSize: 10,
   },
-
   metaRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.md,
     marginTop: spacing.md,
   },
-  meta: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  metaIcon: {
-    fontSize: 13,
-    color: colors.textMuted,
-  },
   metaLabel: {
-    fontSize: 13,
-    color: colors.textMuted,
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     fontWeight: "600",
   },
-
   ingBlock: {
     marginTop: spacing.md,
   },
   ingHead: {
-    fontSize: 11,
-    color: colors.textMuted,
-    fontWeight: "800",
-    letterSpacing: 0.8,
-    textTransform: "uppercase",
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
+    fontSize: 10,
   },
   ingAvail: {
-    fontSize: 13,
+    ...type.bodyMd,
     color: colors.success,
     fontWeight: "600",
     marginTop: 4,
-    lineHeight: 18,
   },
   ingMiss: {
-    fontSize: 13,
-    color: colors.textMuted,
-    fontWeight: "500",
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginTop: 4,
-    lineHeight: 18,
   },
   ingAllSet: {
-    fontSize: 13,
+    ...type.bodyMd,
     color: colors.success,
     fontWeight: "700",
-    marginTop: 4,
+    marginTop: spacing.md,
   },
-
   missHead: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   missBadge: {
-    backgroundColor: colors.brandAccentSoft,
+    backgroundColor: colors.secondaryContainer,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 3,
   },
   missBadgeText: {
-    fontSize: 11,
-    color: colors.brandAccent,
-    fontWeight: "800",
+    ...type.labelCaps,
+    color: colors.primary,
+    fontSize: 10,
   },
-
   cardFoot: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -304,24 +322,29 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
     paddingTop: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopColor: colors.surfaceContainer,
   },
   cardFootText: {
-    fontSize: 13,
+    ...type.bodyMd,
     fontWeight: "700",
-    color: colors.text,
+    color: colors.onSurface,
   },
   cardFootArrow: {
     fontSize: 18,
-    color: colors.text,
+    color: colors.onSurface,
     fontWeight: "800",
   },
-
   cardOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(15,16,20,0.7)",
-    borderRadius: radius.lg,
+    backgroundColor: "rgba(36, 25, 18, 0.75)",
+    borderRadius: radius.card,
     alignItems: "center",
     justifyContent: "center",
+  },
+  overlayText: {
+    color: colors.onPrimary,
+    marginTop: spacing.sm,
+    ...type.bodyMd,
+    fontWeight: "700",
   },
 });

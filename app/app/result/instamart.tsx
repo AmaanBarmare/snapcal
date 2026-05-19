@@ -17,7 +17,8 @@ import {
   checkoutInstamart,
   confirmInstamartCart,
 } from "@/lib/api";
-import { colors, radius, shadow, spacing } from "@/lib/theme";
+import Card from "@/components/Card";
+import { colors, radius, spacing, type } from "@/lib/theme";
 
 type Payment = "UPI" | "COD" | "CARD";
 
@@ -39,7 +40,7 @@ export default function InstamartScreen() {
   if (!cart) {
     return (
       <SafeAreaView style={styles.center}>
-        <Text style={styles.title}>Cart not available</Text>
+        <Text style={styles.errTitle}>Cart not available</Text>
         <Button label="Back" onPress={() => router.back()} style={{ marginTop: spacing.md }} />
       </SafeAreaView>
     );
@@ -76,14 +77,14 @@ export default function InstamartScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
       <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: spacing.xxl }}>
-        <Text style={styles.cap}>INSTAMART CART</Text>
+        <Text style={styles.title}>Order missing ingredients</Text>
         <Text style={styles.recipe}>For {cart.recipeName}</Text>
         <View style={{ alignItems: "flex-start", marginTop: spacing.sm }}>
           <PoweredBySwiggy compact />
         </View>
 
         {cart.skipOrder ? (
-          <View style={[styles.card, styles.allSet]}>
+          <Card style={styles.allSet}>
             <Text style={styles.allSetTitle}>You have everything you need ✓</Text>
             <Text style={styles.allSetBody}>
               No Instamart order required. Time to cook.
@@ -93,10 +94,10 @@ export default function InstamartScreen() {
               onPress={() => router.replace("/(tabs)/today")}
               style={{ marginTop: spacing.md }}
             />
-          </View>
+          </Card>
         ) : (
           <>
-            <View style={styles.card}>
+            <Card style={{ marginTop: spacing.lg }}>
               {cart.items.map((it) => (
                 <View key={it.productId} style={styles.row}>
                   <View style={{ flex: 1 }}>
@@ -122,7 +123,7 @@ export default function InstamartScreen() {
               <View style={styles.etaRow}>
                 <Text style={styles.etaText}>Estimated delivery: ~{cart.etaMinutes} min</Text>
               </View>
-            </View>
+            </Card>
 
             {overCap ? (
               <View style={styles.warningCard}>
@@ -135,7 +136,7 @@ export default function InstamartScreen() {
               </View>
             ) : null}
 
-            <View style={styles.card}>
+            <Card style={{ marginTop: spacing.lg }}>
               <Text style={styles.payHead}>Payment</Text>
               <View style={styles.payRow}>
                 {(["UPI", "COD", "CARD"] as Payment[]).map((p) => (
@@ -157,7 +158,7 @@ export default function InstamartScreen() {
                   </Text>
                 </View>
               ) : null}
-            </View>
+            </Card>
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -167,14 +168,14 @@ export default function InstamartScreen() {
                   ? "Confirming…"
                   : step === "ordering"
                     ? "Placing your order…"
-                    : "Place Order"
+                    : "Place order on Instamart"
               }
               onPress={placeOrder}
               loading={busy}
               disabled={overCap}
             />
             <Button
-              label="Skip ordering, I'll manage"
+              label="Skip ordering"
               onPress={() => router.replace("/(tabs)/today")}
               variant="ghost"
               style={{ marginTop: spacing.sm }}
@@ -205,32 +206,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: spacing.xl,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: colors.text,
+  errTitle: {
+    ...type.headlineLg,
+    color: colors.onSurface,
   },
-
-  cap: {
-    fontSize: 11,
-    color: colors.textMuted,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
+  title: {
+    ...type.headlineLg,
+    color: colors.onSurface,
   },
   recipe: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginTop: spacing.xs,
-  },
-
-  card: {
-    backgroundColor: colors.bgElevated,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginTop: spacing.lg,
-    ...shadow.card,
   },
   row: {
     flexDirection: "row",

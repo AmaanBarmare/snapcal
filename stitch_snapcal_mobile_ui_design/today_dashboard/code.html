@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SnapCal - Today</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#984800",
+                        "inverse-primary": "#ffb689",
+                        "inverse-surface": "#3b2e26",
+                        "secondary-fixed": "#f8dec5",
+                        "primary-container": "#fc8019",
+                        "primary": "#984800",
+                        "surface-container-highest": "#f4ded3",
+                        "secondary": "#6e5b48",
+                        "on-surface": "#241912",
+                        "on-primary-fixed-variant": "#733500",
+                        "surface-dim": "#ebd6ca",
+                        "on-tertiary-container": "#003d59",
+                        "outline": "#8b7264",
+                        "tertiary-fixed": "#c8e6ff",
+                        "surface-container-high": "#fae4d8",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#74614d",
+                        "surface-container-low": "#fff1ea",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f4ded3",
+                        "tertiary": "#006590",
+                        "on-surface-variant": "#574236",
+                        "tertiary-container": "#00adf3",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#dbc2ab",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdbc8",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#311300",
+                        "on-secondary-fixed": "#26190a",
+                        "surface": "#fff8f5",
+                        "on-primary-container": "#5e2a00",
+                        "surface-bright": "#fff8f5",
+                        "secondary-container": "#f8dec5",
+                        "on-background": "#241912",
+                        "on-tertiary-fixed": "#001e2e",
+                        "background": "#fff8f5",
+                        "tertiary-fixed-dim": "#87ceff",
+                        "outline-variant": "#dec1b0",
+                        "inverse-on-surface": "#ffede4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ffeadf",
+                        "primary-fixed-dim": "#ffb689",
+                        "on-secondary-fixed-variant": "#554432"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-margin": "20px",
+                        "stack-gap-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-gap-sm": "8px",
+                        "item-radius": "16px",
+                        "stack-gap-md": "16px"
+                    },
+                    "fontFamily": {
+                        "macro-number": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-calories": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "macro-number": ["18px", {"lineHeight": "22px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "700"}],
+                        "body-lg": ["17px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["15px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-calories": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ambient-shadow {
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
+        }
+        /* Custom styles for progress rings using stroke-dasharray/offset */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-grid-margin w-full h-16 bg-surface top-0 sticky z-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex-shrink-0">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A brightly lit, professional headshot of a smiling young woman with dark hair. The image uses a soft, warm lighting setup against a neutral background, conveying a sense of approachability and health-conscious vitality fitting the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIjFVLMQOliFx0WnQa-o886rvueM072gHdXlr_-vwAkb9QGCPKUVx2ikw1SxeCQUsXHwbrL9qZjIwxMvcfBpdNVu5iFr7curwWmA1tj1UXaW6BQbUJ6JXjJL9_agMbopIEtyS9511B068uSkXnDm-57x14_ThrZwtvWWwjSCSdXT6V6LvpsgyTBihMLkvrDz2NjF4YQWzf67RIMGj-osfYHVvSx89t37GEiXRzy3rmiDy027UCUa_Ca8GRjX_oZ3YFJ8cNnA0jDEA"/>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary">SnapCal</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors scale-95 active:opacity-80 text-primary">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="px-grid-margin mt-stack-gap-sm">
+<!-- Header -->
+<div class="text-center mb-stack-gap-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">Tuesday, 19 May</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">You're on track!</p>
+</div>
+<!-- Central Progress Ring -->
+<div class="relative w-64 h-64 mx-auto mb-stack-gap-lg flex items-center justify-center">
+<!-- Background Ring -->
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 120 120">
+<circle class="stroke-surface-container-high" cx="60" cy="60" fill="none" r="54" stroke-width="12"></circle>
+</svg>
+<!-- Progress Ring (62% approx) -->
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 120 120">
+<circle class="stroke-primary-container progress-ring__circle" cx="60" cy="60" fill="none" r="54" stroke-dasharray="339.292" stroke-dashoffset="128.93" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="text-center z-10 flex flex-col items-center">
+<span class="font-display-calories text-display-calories text-on-surface leading-tight">1,240</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-1">/ 2,000 kcal</span>
+</div>
+</div>
+<!-- Macro Rings (Bento-style layout) -->
+<div class="grid grid-cols-3 gap-3 mb-stack-gap-lg">
+<!-- Protein -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 flex flex-col items-center justify-center ambient-shadow">
+<div class="relative w-12 h-12 mb-2">
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 40 40">
+<circle class="stroke-surface-container" cx="20" cy="20" fill="none" r="16" stroke-width="4"></circle>
+<!-- Using tertiary for 'Green' semantic mapping -->
+<circle class="stroke-tertiary progress-ring__circle" cx="20" cy="20" fill="none" r="16" stroke-dasharray="100.5" stroke-dashoffset="30" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+</div>
+<span class="font-macro-number text-macro-number text-on-surface">62g</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">Protein</span>
+</div>
+<!-- Carbs -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 flex flex-col items-center justify-center ambient-shadow">
+<div class="relative w-12 h-12 mb-2">
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 40 40">
+<circle class="stroke-surface-container" cx="20" cy="20" fill="none" r="16" stroke-width="4"></circle>
+<!-- Using primary for 'Amber' semantic mapping -->
+<circle class="stroke-primary progress-ring__circle" cx="20" cy="20" fill="none" r="16" stroke-dasharray="100.5" stroke-dashoffset="40" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+</div>
+<span class="font-macro-number text-macro-number text-on-surface">148g</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">Carbs</span>
+</div>
+<!-- Fat -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 flex flex-col items-center justify-center ambient-shadow">
+<div class="relative w-12 h-12 mb-2">
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 40 40">
+<circle class="stroke-surface-container" cx="20" cy="20" fill="none" r="16" stroke-width="4"></circle>
+<!-- Using secondary for 'Purple' semantic mapping -->
+<circle class="stroke-secondary progress-ring__circle" cx="20" cy="20" fill="none" r="16" stroke-dasharray="100.5" stroke-dashoffset="60" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+</div>
+<span class="font-macro-number text-macro-number text-on-surface">48g</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">Fat</span>
+</div>
+</div>
+<!-- Meals Section -->
+<section>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-gap-md">Today's meals</h3>
+<div class="flex flex-col gap-stack-gap-sm">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-item-radius p-3 flex items-center gap-4 ambient-shadow">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Poha" class="w-full h-full object-cover" data-alt="A close-up, high-quality photograph of a bowl of fresh Indian Poha. The dish is vividly yellow, garnished with green coriander, peanuts, and a slice of lemon. The lighting is bright and warm, creating a welcoming, appetizing, and modern aesthetic on a clean white surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBba6ALEpdD1XlabmyjOwj3Gcou58MzEKrEdUF6tfwT68WGwWNty8wCVbVG6Sums7ZyMJa7Q2z1U1EjFeKtY86JsjetaPiBS0tdce6_mz36xpbQj6YOd-06u9ERm_1h7PnE-w9KhGXHBxhNRzVKpzWALMk1oHGK36Or9WLWH4Nupu1VtkvCQTpwExFJk57qQ2uuuXc1FA9eGJWxgWk8NqjgkyiSdKBC8rJF3xTYxNJWpTePOrZ8D4iR0rPQ4JQoZPLBDytmY05JvI0"/>
+</div>
+<div class="flex-grow flex flex-col justify-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">BREAKFAST • 8:42 AM</span>
+<span class="font-headline-md text-headline-md text-on-surface">Poha</span>
+</div>
+<div class="text-right">
+<span class="font-macro-number text-macro-number text-primary-container">280</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant block">kcal</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-item-radius p-3 flex items-center gap-4 ambient-shadow">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Dal and Rice" class="w-full h-full object-cover" data-alt="A top-down view of a modern, minimalist white bowl containing a comforting portion of Indian Dal and white rice. The rich yellow of the lentils contrasts warmly with the stark white rice. The lighting is soft and diffused, emphasizing a clean, homestyle, and healthy dietary choice." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBrbhqMvTnjDo_Ii6qSnh9P_xZoLzMMCyP3L6dfISEE0b5nFLArh4hEyeWLy5lybq6sN7ICujEcc0tLDU8t5zvm1nst4j-YLXApKR9D7st4Hx7eSyzGiy9EefGMOs2kdxv52ULww27AytjpeHnWOW_Fd1YRdskCArsHh1wMboVCsNn4-LSUKX8bEMhFuHK88-Xg8_hl9MgWhPdN-f4S60MXuvsmmslrQijoZypKevQnDL1b8WNPNRdy9FzrKuEa4MgZFz6hMR6SPg"/>
+</div>
+<div class="flex-grow flex flex-col justify-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">LUNCH • 1:15 PM</span>
+<span class="font-headline-md text-headline-md text-on-surface">Dal + Rice</span>
+</div>
+<div class="text-right">
+<span class="font-macro-number text-macro-number text-primary-container">520</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant block">kcal</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-surface shadow-[0_-4px_16px_0_rgba(0,0,0,0.04)] rounded-t-xl md:hidden">
+<!-- Today (Active) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2 scale-110 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="calendar_today" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-caps text-label-caps mt-1">Today</span>
+</button>
+<!-- Snap -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 hover:bg-surface-container-high transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+<span class="font-label-caps text-label-caps mt-1">Snap</span>
+</button>
+<!-- History -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 hover:bg-surface-container-high transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps mt-1">History</span>
+</button>
+</nav>
+</body></html>

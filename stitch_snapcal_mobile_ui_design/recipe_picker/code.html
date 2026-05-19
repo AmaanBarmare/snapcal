@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>SnapCal - Recipes</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#984800",
+                    "inverse-primary": "#ffb689",
+                    "inverse-surface": "#3b2e26",
+                    "secondary-fixed": "#f8dec5",
+                    "primary-container": "#fc8019",
+                    "primary": "#984800",
+                    "surface-container-highest": "#f4ded3",
+                    "secondary": "#6e5b48",
+                    "on-surface": "#241912",
+                    "on-primary-fixed-variant": "#733500",
+                    "surface-dim": "#ebd6ca",
+                    "on-tertiary-container": "#003d59",
+                    "outline": "#8b7264",
+                    "tertiary-fixed": "#c8e6ff",
+                    "surface-container-high": "#fae4d8",
+                    "on-tertiary-fixed-variant": "#004c6d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-secondary-container": "#74614d",
+                    "surface-container-low": "#fff1ea",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#f4ded3",
+                    "tertiary": "#006590",
+                    "on-surface-variant": "#574236",
+                    "tertiary-container": "#00adf3",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#dbc2ab",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#ffdbc8",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#311300",
+                    "on-secondary-fixed": "#26190a",
+                    "surface": "#fff8f5",
+                    "on-primary-container": "#5e2a00",
+                    "surface-bright": "#fff8f5",
+                    "secondary-container": "#f8dec5",
+                    "on-background": "#241912",
+                    "on-tertiary-fixed": "#001e2e",
+                    "background": "#fff8f5",
+                    "tertiary-fixed-dim": "#87ceff",
+                    "outline-variant": "#dec1b0",
+                    "inverse-on-surface": "#ffede4",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#ffeadf",
+                    "primary-fixed-dim": "#ffb689",
+                    "on-secondary-fixed-variant": "#554432"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "grid-margin": "20px",
+                    "stack-gap-lg": "24px",
+                    "container-padding": "20px",
+                    "stack-gap-sm": "8px",
+                    "item-radius": "16px",
+                    "stack-gap-md": "16px"
+            },
+            "fontFamily": {
+                    "macro-number": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "display-calories": ["Plus Jakarta Sans"],
+                    "label-caps": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "macro-number": ["18px", {"lineHeight": "22px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "700"}],
+                    "body-lg": ["17px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["15px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-calories": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base typography setup mapped from config */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fff8f5; /* Strict adherence to background token */
+            color: #241912;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ambient-shadow {
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pb-28 antialiased selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-grid-margin w-full h-16 bg-surface dark:bg-background z-40 sticky top-0">
+<div class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden scale-95 active:opacity-80 transition-transform">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed-dim">
+            SnapCal
+        </div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-primary dark:text-inverse-primary scale-95 active:opacity-80 transition-transform">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-md mx-auto flex flex-col">
+<!-- Page Title -->
+<div class="px-grid-margin pt-6 pb-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Recipes for you</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Based on your recent snaps and pantry.</p>
+</div>
+<!-- Recipe List -->
+<div class="px-grid-margin flex flex-col gap-stack-gap-md pb-8">
+<!-- Card 1 (Selected/Highlighted) -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 ambient-shadow border-2 border-primary-container relative overflow-hidden transition-all duration-300">
+<!-- Highlight Indicator -->
+<div class="absolute top-0 right-0 bg-primary-container text-white font-label-caps text-label-caps px-3 py-1 rounded-bl-lg rounded-tr-item-radius shadow-sm">
+                    Perfect Match
+                </div>
+<div class="flex gap-4">
+<!-- Image -->
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="Paneer Bhurji Wrap" class="w-full h-full object-cover" data-alt="A close-up, appetizing shot of a freshly made Paneer Bhurji Wrap, cut in half to show the spiced scrambled paneer filling. The wrap rests on a clean, white ceramic plate set against a warm, light-wood kitchen table. Bright, natural morning light floods the scene, enhancing the vibrant saffron and golden tones of the food, perfectly matching a modern, clean food-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw2tihcedTjpWETsNpmGyBKUbswCxBrZswY8oRuOh2vXSVdHsnUM8CfFcJ7W5x-0rxlZfQ0tyw9TcZuOuUXxH6H3dZivYF0cbAxG2AsmpYreDzdd74QHL7z9FdLwO3JDnRWM5Mubw9hYvjx-H607f-8m29L_PNAOsREP_NFIB_MaEPB__-AYtDdEgsZcIY0ebHXzBzYSOYSH7z9s2tEITm50Nbj0Wz7byg4T0V426mYRFVnnORnQfYjljP0oOkPIFMzNxrvJ4dlF4"/>
+</div>
+<!-- Info -->
+<div class="flex flex-col justify-center w-full">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Paneer Bhurji Wrap</h2>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-md text-body-md mb-2">
+<span class="flex items-center gap-1 text-[13px]"><span class="material-symbols-outlined text-[16px]">schedule</span> 20 min</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[13px]">Easy</span>
+</div>
+<div class="font-macro-number text-macro-number text-primary-container">
+                            420 <span class="text-[14px] font-normal text-on-surface-variant">kcal</span>
+</div>
+</div>
+</div>
+<!-- Ingredient Badges -->
+<div class="mt-4 pt-4 border-t border-surface-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Pantry Check</p>
+<div class="flex flex-wrap gap-2">
+<!-- 'Have' Badges (Using warm secondary palette as per strict theme rules, mimicking success) -->
+<span class="bg-secondary-container text-on-secondary-container flex items-center gap-1 px-3 py-1.5 rounded-full font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'wght' 700;">check</span> Paneer
+                        </span>
+<span class="bg-secondary-container text-on-secondary-container flex items-center gap-1 px-3 py-1.5 rounded-full font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'wght' 700;">check</span> Tomato
+                        </span>
+<!-- 'Missing' Badges -->
+<span class="bg-surface-variant text-on-surface-variant flex items-center gap-1 px-3 py-1.5 rounded-full font-label-caps text-label-caps opacity-80">
+<span class="material-symbols-outlined text-[14px]">close</span> Onion
+                        </span>
+<span class="bg-surface-variant text-on-surface-variant flex items-center gap-1 px-3 py-1.5 rounded-full font-label-caps text-label-caps opacity-80">
+<span class="material-symbols-outlined text-[14px]">close</span> Capsicum
+                        </span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 ambient-shadow flex gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="Kadai Paneer" class="w-full h-full object-cover" data-alt="A top-down view of a small copper bowl filled with rich, vibrant Kadai Paneer, garnished with fresh cilantro and julienned ginger. The dish is placed on a minimalist, off-white surface with a soft, ambient shadow. The lighting is bright and inviting, highlighting the deep reds and warm Saffron orange hues of the curry, creating a high-quality, professional culinary look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATqx-Kh4nh5zm6qakOYmdQPZ0uClZnSTJ7iOLktbTNC8ke2aKzBm3xA3QHlE0vl_fqDii_DcSoS3W7oatEQfUsr2HaFLst3SOyo3XGrCz6xYiSO0tv1oTgHpRFgzaQRJcj_-qytcVTdDiF8ek3nFokScj0ETL5hyDUdDHTudEOvF8PHHXMOiaqAH1D5rQ1c0xDkQMo6iYQRtSXL_X6BHVBagflCXhCFmkLkjH9V8W65NAP8zQsgsYBezixlHxNjx8ehfKOMnkhaAE"/>
+</div>
+<div class="flex flex-col justify-center w-full">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Kadai Paneer</h2>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-md text-body-md mb-2">
+<span class="flex items-center gap-1 text-[13px]"><span class="material-symbols-outlined text-[16px]">schedule</span> 35 min</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[13px]">Medium</span>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<div class="font-macro-number text-macro-number text-primary-container">
+                            550 <span class="text-[14px] font-normal text-on-surface-variant">kcal</span>
+</div>
+<span class="font-label-caps text-label-caps text-outline bg-surface px-2 py-1 rounded">Missing 3 items</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-item-radius p-4 ambient-shadow flex gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="Paneer Tikka" class="w-full h-full object-cover" data-alt="A high-resolution image of perfectly charred Paneer Tikka chunks on a sleek bamboo skewer, served with a side of mint chutney. The food sits on a matte white rectangular platter over a subtle off-white background. The lighting is crisp and modern, emphasizing the rich red and orange marinades of the paneer, designed for a premium mobile app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL26D3U8UngV38WQX-x5jYJrUA-p1t7aQlh_ZieeAYoF1NcsbiGsRJqIXD4dlbD0Dw5nX13FJmClAJi4I8pYqUd3aBdC25AwuBHuws9WtiLaR5h13aXyFr11NBbeC129xU-EpAQ7U9aT-l9relOneb6oZNz7zY0H6NKwvGng6TwLv3T2_uohCoFhe-RZrOBtKKnTn5ivembwZX29QVlY_fHkfWglWIFcNpb37YL_qAUTJTTn_OBw5esOWzkEqqv_gFeyFgGxzTLsA"/>
+</div>
+<div class="flex flex-col justify-center w-full">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Paneer Tikka</h2>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-md text-body-md mb-2">
+<span class="flex items-center gap-1 text-[13px]"><span class="material-symbols-outlined text-[16px]">schedule</span> 25 min</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[13px]">Easy</span>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<div class="font-macro-number text-macro-number text-primary-container">
+                            380 <span class="text-[14px] font-normal text-on-surface-variant">kcal</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-surface dark:bg-surface-container-highest shadow-[0_-4px_16px_0_rgba(0,0,0,0.04)] rounded-t-xl md:hidden">
+<!-- Tab 1 (Active) -->
+<button class="scale-110 active:scale-95 transition-transform duration-200 group">
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary text-on-secondary-container dark:text-on-primary rounded-full px-6 py-2">
+<span class="material-symbols-outlined" data-icon="calendar_today" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-caps text-label-caps mt-1">Today</span>
+</div>
+</button>
+<!-- Tab 2 (Inactive) -->
+<button class="scale-110 active:scale-95 transition-transform duration-200 group hover:bg-surface-container-high transition-all rounded-full">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-6 py-2">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+<span class="font-label-caps text-label-caps mt-1">Snap</span>
+</div>
+</button>
+<!-- Tab 3 (Inactive) -->
+<button class="scale-110 active:scale-95 transition-transform duration-200 group hover:bg-surface-container-high transition-all rounded-full">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-6 py-2">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps mt-1">History</span>
+</div>
+</button>
+</nav>
+</body></html>

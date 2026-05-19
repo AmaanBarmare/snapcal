@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, radius, spacing, type } from "@/lib/theme";
 
 interface ButtonProps {
   label: string;
@@ -32,20 +32,22 @@ export default function Button({
         variant === "ghost" && styles.ghost,
         variant === "danger" && styles.danger,
         isDisabled && { opacity: 0.5 },
-        pressed && !isDisabled && { opacity: 0.85 },
+        pressed && !isDisabled && { transform: [{ scale: 0.98 }] },
         style,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" || variant === "danger" ? "#fff" : colors.text} />
+        <ActivityIndicator
+          color={variant === "primary" || variant === "danger" ? colors.onPrimary : colors.onSurface}
+        />
       ) : (
         <Text
           style={[
             styles.label,
-            variant === "primary" && { color: colors.textInverse },
-            variant === "secondary" && { color: colors.text },
-            variant === "ghost" && { color: colors.text },
-            variant === "danger" && { color: colors.textInverse },
+            variant === "primary" && styles.labelPrimary,
+            variant === "secondary" && styles.labelSecondary,
+            variant === "ghost" && styles.labelGhost,
+            variant === "danger" && styles.labelPrimary,
           ]}
         >
           {label}
@@ -57,30 +59,47 @@ export default function Button({
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: spacing.md + 2,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    borderRadius: radius.pill,
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
+    minHeight: 56,
   },
   primary: {
-    backgroundColor: colors.brand,
+    backgroundColor: colors.primaryContainer,
+    ...{
+      shadowColor: "#000",
+      shadowOpacity: 0.12,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
   },
   secondary: {
-    backgroundColor: colors.bgElevated,
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: colors.secondaryContainer,
   },
   ghost: {
     backgroundColor: "transparent",
   },
   danger: {
-    backgroundColor: colors.danger,
+    backgroundColor: colors.error,
   },
   label: {
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 0.2,
+    ...type.headlineMd,
+    fontSize: 17,
+  },
+  labelPrimary: {
+    color: colors.onPrimary,
+  },
+  labelSecondary: {
+    color: colors.onSecondaryContainer,
+  },
+  labelGhost: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    textDecorationLine: "underline",
+    fontFamily: type.bodyMd.fontFamily,
+    fontWeight: "400",
   },
 });

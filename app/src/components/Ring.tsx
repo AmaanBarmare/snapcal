@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
-import { colors } from "@/lib/theme";
+import { colors, type } from "@/lib/theme";
 
 interface RingProps {
   size?: number;
@@ -16,12 +16,12 @@ interface RingProps {
 }
 
 export default function Ring({
-  size = 220,
-  stroke = 22,
+  size = 256,
+  stroke = 12,
   value,
   target,
   color = colors.ringCalories,
-  trackColor = colors.ringTrack,
+  trackColor = colors.surfaceContainerHigh,
   label,
   subLabel,
 }: RingProps) {
@@ -55,7 +55,7 @@ export default function Ring({
         />
       </Svg>
       <View style={styles.center} pointerEvents="none">
-        <Text style={styles.value}>{Math.round(value)}</Text>
+        <Text style={styles.value}>{Math.round(value).toLocaleString("en-IN")}</Text>
         {label ? <Text style={styles.label}>{label}</Text> : null}
         {subLabel ? <Text style={styles.sub}>{subLabel}</Text> : null}
       </View>
@@ -69,20 +69,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   value: {
-    fontSize: 44,
-    fontWeight: "800",
-    color: colors.text,
-    letterSpacing: -1,
+    ...type.displayCalories,
+    color: colors.onSurface,
   },
   label: {
-    fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 2,
-    letterSpacing: 0.5,
+    ...type.bodyLg,
+    color: colors.onSurfaceVariant,
+    marginTop: 4,
   },
   sub: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 4,
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    marginTop: 2,
   },
 });

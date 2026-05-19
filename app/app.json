@@ -27,7 +27,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FC8019"
       },
-      "permissions": ["CAMERA"]
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -36,7 +38,8 @@
         {
           "cameraPermission": "SnapCal needs camera access to identify food and your fridge contents."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

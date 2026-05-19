@@ -10,17 +10,27 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import AppHeader from "@/components/AppHeader";
 import Button from "@/components/Button";
-import MacroBar from "@/components/MacroBar";
+import Card from "@/components/Card";
+import MacroMiniRing from "@/components/MacroMiniRing";
 import PoweredBySwiggy from "@/components/PoweredBySwiggy";
 import Ring from "@/components/Ring";
 import { DashboardTodayResponse, getToday } from "@/lib/api";
-import { colors, radius, shadow, spacing } from "@/lib/theme";
+import { colors, radius, spacing, type } from "@/lib/theme";
 import { useSessionStore } from "@/store/sessionStore";
 
 function formatTime(ts: string): string {
   const d = new Date(ts);
   return d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+}
+
+function mealPeriod(ts: string): string {
+  const h = new Date(ts).getHours();
+  if (h < 11) return "BREAKFAST";
+  if (h < 16) return "LUNCH";
+  if (h < 18) return "SNACK";
+  return "DINNER";
 }
 
 export default function TodayScreen() {
@@ -54,8 +64,8 @@ export default function TodayScreen() {
 
   if (loading || !today) {
     return (
-      <SafeAreaView style={styles.center}>
-        <ActivityIndicator />
+      <SafeAreaView style={styles.center} edges={["top"]}>
+        <ActivityIndicator color={colors.primaryContainer} />
       </SafeAreaView>
     );
   }
@@ -67,214 +77,209 @@ export default function TodayScreen() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={["top"]}>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <AppHeader />
       <ScrollView
-        contentContainerStyle={{ padding: spacing.lg, paddingBottom: spacing.xxl }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
-          setRefreshing(true);
-          load();
-        }} />}
+        contentContainerStyle={styles.scroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              load();
+            }}
+            tintColor={colors.primaryContainer}
+          />
+        }
       >
-        <View style={styles.header}>
-          <Text style={styles.dateLabel}>Today</Text>
-          <Text style={styles.dateValue}>{date}</Text>
+        <View style={styles.dateBlock}>
+          <Text style={styles.dateTitle}>{date}</Text>
+          <Text style={styles.dateSub}>You're on track!</Text>
         </View>
 
-        <View style={[styles.card, styles.ringCard]}>
+        <View style={styles.ringWrap}>
           <Ring
             value={today.totals.calories}
             target={today.targets.calories}
-            label="kcal eaten"
-            subLabel={`of ${today.targets.calories}`}
+            subLabel={`/ ${today.targets.calories.toLocaleString("en-IN")} kcal`}
           />
-          <View style={styles.macros}>
-            <MacroBar
+        </View>
+
+        <View style={styles.macroGrid}>
+          <Card style={styles.macroCard}>
+            <MacroMiniRing
               label="Protein"
               value={today.totals.proteinG}
               target={today.targets.proteinG}
               color={colors.ringProtein}
             />
-            <MacroBar
+          </Card>
+          <Card style={styles.macroCard}>
+            <MacroMiniRing
               label="Carbs"
               value={today.totals.carbsG}
               target={today.targets.carbsG}
               color={colors.ringCarbs}
             />
-            <MacroBar
+          </Card>
+          <Card style={styles.macroCard}>
+            <MacroMiniRing
               label="Fat"
               value={today.totals.fatG}
               target={today.targets.fatG}
               color={colors.ringFat}
             />
-          </View>
+          </Card>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Meals today</Text>
-          {today.meals.length === 0 ? (
-            <View style={[styles.card, styles.empty]}>
-              <Text style={styles.emptyTitle}>Nothing logged yet</Text>
-              <Text style={styles.emptyBody}>
-                Open the Snap tab and point your camera at your meal. SnapCal does the rest.
-              </Text>
-              <Button label="Open camera" onPress={() => router.push("/(tabs)")} style={{ marginTop: spacing.md }} />
-            </View>
-          ) : (
-            today.meals.map((m) => (
-              <View key={m.id} style={[styles.card, styles.mealRow]}>
-                <View style={{ flex: 1 }}>
-                  <View style={styles.mealHead}>
-                    <Text style={styles.mealName}>{m.dishName}</Text>
-                    {m.isPlanned ? (
-                      <View style={styles.plannedBadge}>
-                        <Text style={styles.plannedBadgeText}>PLANNED</Text>
-                      </View>
-                    ) : null}
-                    {m.source === "mode1" || m.swiggyOrderId ? (
-                      <PoweredBySwiggy compact />
-                    ) : null}
-                  </View>
-                  <Text style={styles.mealMeta}>
-                    {formatTime(m.timestamp)} · {Math.round(m.servingGrams)}g
-                  </Text>
-                </View>
-                <View style={styles.mealNumbers}>
-                  <Text style={styles.mealKcal}>{Math.round(m.calories)}</Text>
-                  <Text style={styles.mealKcalLabel}>kcal</Text>
-                  <Text style={styles.mealProtein}>P {Math.round(m.proteinG)}g</Text>
-                </View>
+        <Text style={styles.sectionTitle}>Today's meals</Text>
+
+        {today.meals.length === 0 ? (
+          <Card style={styles.empty}>
+            <Text style={styles.emptyTitle}>Nothing logged yet</Text>
+            <Text style={styles.emptyBody}>
+              Open the Snap tab and point your camera at your meal.
+            </Text>
+            <Button
+              label="Open camera"
+              onPress={() => router.push("/(tabs)")}
+              style={{ marginTop: spacing.lg, alignSelf: "stretch" }}
+            />
+          </Card>
+        ) : (
+          today.meals.map((m) => (
+            <Card key={m.id} style={styles.mealCard}>
+              <View style={styles.mealThumb}>
+                <Text style={styles.mealThumbEmoji}>🍽</Text>
               </View>
-            ))
-          )}
-        </View>
+              <View style={styles.mealBody}>
+                <Text style={styles.mealMeta}>
+                  {mealPeriod(m.timestamp)} • {formatTime(m.timestamp)}
+                </Text>
+                <Text style={styles.mealName} numberOfLines={2}>
+                  {m.dishName}
+                </Text>
+                {m.source === "mode1" || m.swiggyOrderId ? (
+                  <PoweredBySwiggy compact />
+                ) : null}
+              </View>
+              <View style={styles.mealKcal}>
+                <Text style={styles.mealKcalNum}>{Math.round(m.calories)}</Text>
+                <Text style={styles.mealKcalUnit}>kcal</Text>
+              </View>
+            </Card>
+          ))
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   center: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
-
-  header: {
-    marginBottom: spacing.lg,
+  scroll: {
+    paddingHorizontal: spacing.gridMargin,
+    paddingBottom: 120,
   },
-  dateLabel: {
-    fontSize: 13,
-    color: colors.textMuted,
-    fontWeight: "600",
-    letterSpacing: 1,
-    textTransform: "uppercase",
-  },
-  dateValue: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: colors.text,
-    marginTop: 2,
-  },
-
-  card: {
-    backgroundColor: colors.bgElevated,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
-    ...shadow.card,
-  },
-  ringCard: {
+  dateBlock: {
     alignItems: "center",
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
-  },
-  macros: {
-    width: "100%",
-    marginTop: spacing.xl,
-  },
-
-  section: {
-    marginTop: spacing.lg,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: colors.textMuted,
-    letterSpacing: 0.8,
-    textTransform: "uppercase",
-    marginBottom: spacing.md,
-    marginLeft: spacing.xs,
-  },
-
-  empty: {
-    alignItems: "center",
-    paddingVertical: spacing.xl,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.text,
-  },
-  emptyBody: {
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: "center",
     marginTop: spacing.sm,
-    lineHeight: 20,
+    marginBottom: spacing.xl,
   },
-
-  mealRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  dateTitle: {
+    ...type.headlineMd,
+    color: colors.onSurface,
   },
-  mealHead: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-    flexWrap: "wrap",
-  },
-  mealName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.text,
-  },
-  mealMeta: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 2,
-  },
-  mealNumbers: {
-    alignItems: "flex-end",
-    marginLeft: spacing.md,
-  },
-  mealKcal: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: colors.text,
-    lineHeight: 24,
-  },
-  mealKcalLabel: {
-    fontSize: 11,
-    color: colors.textMuted,
-  },
-  mealProtein: {
-    fontSize: 12,
-    color: colors.ringProtein,
-    fontWeight: "700",
+  dateSub: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginTop: 4,
   },
-
-  plannedBadge: {
-    backgroundColor: colors.brandAccentSoft,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
+  ringWrap: {
+    alignItems: "center",
+    marginBottom: spacing.xl,
   },
-  plannedBadgeText: {
+  macroGrid: {
+    flexDirection: "row",
+    gap: spacing.md,
+    marginBottom: spacing.xl,
+  },
+  macroCard: {
+    flex: 1,
+    padding: spacing.md,
+    alignItems: "center",
+  },
+  sectionTitle: {
+    ...type.headlineMd,
+    color: colors.onSurface,
+    marginBottom: spacing.lg,
+  },
+  empty: {
+    alignItems: "center",
+    paddingVertical: spacing.xxl,
+  },
+  emptyTitle: {
+    ...type.headlineMd,
+    color: colors.onSurface,
+  },
+  emptyBody: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    textAlign: "center",
+    marginTop: spacing.sm,
+  },
+  mealCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.lg,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  mealThumb: {
+    width: 64,
+    height: 64,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceContainerLow,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mealThumbEmoji: {
+    fontSize: 28,
+  },
+  mealBody: {
+    flex: 1,
+    gap: 4,
+  },
+  mealMeta: {
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
     fontSize: 10,
-    color: colors.brandAccent,
-    fontWeight: "800",
-    letterSpacing: 0.5,
+  },
+  mealName: {
+    ...type.headlineMd,
+    color: colors.onSurface,
+    fontSize: 18,
+  },
+  mealKcal: {
+    alignItems: "flex-end",
+  },
+  mealKcalNum: {
+    ...type.macroNumber,
+    color: colors.primaryContainer,
+    fontSize: 20,
+  },
+  mealKcalUnit: {
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
+    fontSize: 10,
   },
 });

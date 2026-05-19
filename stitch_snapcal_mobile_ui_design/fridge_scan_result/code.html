@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>What's in your fridge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#984800",
+                        "inverse-primary": "#ffb689",
+                        "inverse-surface": "#3b2e26",
+                        "secondary-fixed": "#f8dec5",
+                        "primary-container": "#fc8019",
+                        "primary": "#984800",
+                        "surface-container-highest": "#f4ded3",
+                        "secondary": "#6e5b48",
+                        "on-surface": "#241912",
+                        "on-primary-fixed-variant": "#733500",
+                        "surface-dim": "#ebd6ca",
+                        "on-tertiary-container": "#003d59",
+                        "outline": "#8b7264",
+                        "tertiary-fixed": "#c8e6ff",
+                        "surface-container-high": "#fae4d8",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#74614d",
+                        "surface-container-low": "#fff1ea",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f4ded3",
+                        "tertiary": "#006590",
+                        "on-surface-variant": "#574236",
+                        "tertiary-container": "#00adf3",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#dbc2ab",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdbc8",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#311300",
+                        "on-secondary-fixed": "#26190a",
+                        "surface": "#fff8f5",
+                        "on-primary-container": "#5e2a00",
+                        "surface-bright": "#fff8f5",
+                        "secondary-container": "#f8dec5",
+                        "on-background": "#241912",
+                        "on-tertiary-fixed": "#001e2e",
+                        "background": "#fff8f5",
+                        "tertiary-fixed-dim": "#87ceff",
+                        "outline-variant": "#dec1b0",
+                        "inverse-on-surface": "#ffede4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ffeadf",
+                        "primary-fixed-dim": "#ffb689",
+                        "on-secondary-fixed-variant": "#554432"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-margin": "20px",
+                        "stack-gap-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-gap-sm": "8px",
+                        "item-radius": "16px",
+                        "stack-gap-md": "16px"
+                    },
+                    "fontFamily": {
+                        "macro-number": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-calories": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "macro-number": ["18px", {"lineHeight": "22px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "700"}],
+                        "body-lg": ["17px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["15px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-calories": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .ambient-shadow {
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
+        }
+        .elevated-shadow {
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col px-grid-margin pt-12 pb-32">
+<!-- Header -->
+<header class="mb-8">
+<button aria-label="Go back" class="mb-6 text-on-surface-variant flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">What's in your fridge</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">We identified these ingredients from your snap.</p>
+</header>
+<!-- Detected Ingredients Section -->
+<section class="mb-8 flex-1">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Detected</h2>
+<button class="flex items-center gap-1 text-primary font-label-caps text-label-caps bg-surface-container-low px-3 py-1.5 rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">edit</span>
+                    Edit
+                </button>
+</div>
+<!-- Horizontal Scrollable Pills -->
+<div class="flex overflow-x-auto gap-stack-gap-sm pb-6 snap-x hide-scrollbar -mx-grid-margin px-grid-margin">
+<!-- Pill 1 -->
+<div class="snap-start shrink-0 bg-surface-container-lowest rounded-full px-5 py-3 flex items-center gap-2 ambient-shadow border border-surface-container-high">
+<div class="w-2 h-2 rounded-full bg-[#E53935]"></div>
+<span class="font-body-lg text-body-lg text-on-surface">Tomato</span>
+</div>
+<!-- Pill 2 -->
+<div class="snap-start shrink-0 bg-surface-container-lowest rounded-full px-5 py-3 flex items-center gap-2 ambient-shadow border border-surface-container-high">
+<div class="w-2 h-2 rounded-full bg-[#FFF59D]"></div>
+<span class="font-body-lg text-body-lg text-on-surface">Paneer</span>
+</div>
+<!-- Pill 3 -->
+<div class="snap-start shrink-0 bg-surface-container-lowest rounded-full px-5 py-3 flex items-center gap-2 ambient-shadow border border-surface-container-high">
+<div class="w-2 h-2 rounded-full bg-[#FFFFFF] border border-surface-variant"></div>
+<span class="font-body-lg text-body-lg text-on-surface">Dahi</span>
+</div>
+<!-- Pill 4 -->
+<div class="snap-start shrink-0 bg-surface-container-lowest rounded-full px-5 py-3 flex items-center gap-2 ambient-shadow border border-surface-container-high">
+<div class="w-2 h-2 rounded-full bg-[#CE93D8]"></div>
+<span class="font-body-lg text-body-lg text-on-surface">Onion</span>
+</div>
+<!-- Pill 5 -->
+<div class="snap-start shrink-0 bg-surface-container-lowest rounded-full px-5 py-3 flex items-center gap-2 ambient-shadow border border-surface-container-high">
+<div class="w-2 h-2 rounded-full bg-[#4CAF50]"></div>
+<span class="font-body-lg text-body-lg text-on-surface">Capsicum</span>
+</div>
+<!-- Add More Pill -->
+<button class="snap-start shrink-0 bg-surface-container-low rounded-full px-4 py-3 flex items-center justify-center border border-dashed border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Optional AI Suggestion Context (Visual filler to show high end UI) -->
+<div class="mt-4 bg-surface-container-low rounded-item-radius p-5 ambient-shadow border border-surface-variant/50 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+<div class="flex items-start gap-3 relative z-10">
+<span class="material-symbols-outlined text-primary mt-0.5">auto_awesome</span>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 text-[16px]">Perfect Match</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Looks like you have everything needed for a fresh Kadai Paneer.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Spacer -->
+<div class="flex-grow"></div>
+<!-- Trust Badge -->
+<div class="flex justify-center items-center mb-4 opacity-80">
+<div class="bg-surface-container-lowest px-4 py-1.5 rounded-full flex items-center gap-2 ambient-shadow text-[11px] font-bold tracking-wider text-on-surface-variant uppercase">
+<span class="w-4 h-4 rounded-full bg-primary-container flex items-center justify-center text-white text-[10px] font-bold">S</span>
+                Powered by Swiggy
+            </div>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-primary-container text-on-primary font-headline-md text-headline-md py-4 rounded-full elevated-shadow flex justify-center items-center gap-2 transition-transform active:scale-95 hover:bg-primary-container/90">
+            Find recipes
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</main>
+<!-- Shared Component: BottomNavBar -->
+<!-- Active State Logic applied to "Snap" since this is a scan result -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-surface dark:bg-surface-container-highest shadow-[0_-4px_16px_0_rgba(0,0,0,0.04)] rounded-t-xl">
+<!-- Tab: Today (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined mb-1">calendar_today</span>
+<span class="font-label-caps text-label-caps">Today</span>
+</button>
+<!-- Tab: Snap (Active) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary text-on-secondary-container dark:text-on-primary rounded-full px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200">
+<span class="material-symbols-outlined mb-1" data-weight="fill" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+<span class="font-label-caps text-label-caps">Snap</span>
+</button>
+<!-- Tab: History (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined mb-1">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</button>
+</nav>
+</body></html>

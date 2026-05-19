@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SnapCal - Welcome</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#984800",
+                        "inverse-primary": "#ffb689",
+                        "inverse-surface": "#3b2e26",
+                        "secondary-fixed": "#f8dec5",
+                        "primary-container": "#fc8019",
+                        "primary": "#984800",
+                        "surface-container-highest": "#f4ded3",
+                        "secondary": "#6e5b48",
+                        "on-surface": "#241912",
+                        "on-primary-fixed-variant": "#733500",
+                        "surface-dim": "#ebd6ca",
+                        "on-tertiary-container": "#003d59",
+                        "outline": "#8b7264",
+                        "tertiary-fixed": "#c8e6ff",
+                        "surface-container-high": "#fae4d8",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#74614d",
+                        "surface-container-low": "#fff1ea",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f4ded3",
+                        "tertiary": "#006590",
+                        "on-surface-variant": "#574236",
+                        "tertiary-container": "#00adf3",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#dbc2ab",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdbc8",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#311300",
+                        "on-secondary-fixed": "#26190a",
+                        "surface": "#fff8f5",
+                        "on-primary-container": "#5e2a00",
+                        "surface-bright": "#fff8f5",
+                        "secondary-container": "#f8dec5",
+                        "on-background": "#241912",
+                        "on-tertiary-fixed": "#001e2e",
+                        "background": "#fff8f5",
+                        "tertiary-fixed-dim": "#87ceff",
+                        "outline-variant": "#dec1b0",
+                        "inverse-on-surface": "#ffede4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ffeadf",
+                        "primary-fixed-dim": "#ffb689",
+                        "on-secondary-fixed-variant": "#554432"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-margin": "20px",
+                        "stack-gap-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-gap-sm": "8px",
+                        "item-radius": "16px",
+                        "stack-gap-md": "16px"
+                    },
+                    "fontFamily": {
+                        "macro-number": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-calories": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "macro-number": ["18px", { "lineHeight": "22px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "fontWeight": "700" }],
+                        "body-lg": ["17px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["15px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-calories": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ambient-shadow {
+            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.04);
+        }
+        /* Custom scrollbar hiding for cleaner look on some mobile views if content overflows */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-full overflow-hidden flex flex-col font-sans antialiased selection:bg-primary-container selection:text-white">
+<!-- Hero Image Area with subtle gradient overlay -->
+<div class="relative h-[397px] w-full flex-shrink-0 rounded-b-[32px] overflow-hidden bg-surface-container-high ambient-shadow">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A vibrant, overhead shot of a healthy Indian meal laid out on a clean, light-colored wooden table. The composition includes a beautifully plated bowl of dal, fresh roti, vibrant mixed vegetable sabzi, and a small side of bright white yogurt. The lighting is bright, natural, and warm, casting soft shadows that evoke a welcoming, modern 'kitchen-table' aesthetic. The colors are rich and appetizing, perfectly aligning with a fresh, food-tech brand identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDCCypghIzpjx02PXpHtRPrM18L-hjvbS2HkegT33kSiploR3dezZmltuZfGu5D6E2sRzBSUD1AwXJOTrIhaqezhz6A7Tof_diegiufmvUTI_3ZjnZuTv2n7bjIrzrnl7SMdzWd-o45FUMTA0dCeHRwypZy9kaclD2e8smlIThHZ1sprJgqpYu-LLxawqyhc8wPAoCZ9E-Jy4q-O8Fb9l8h-EsRSPrOgCYHYDnJdVu8mVLUzdRoJ-HCN119A7CR-wf2s_MfOYLpdhM');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 px-grid-margin pt-6 pb-8 flex flex-col justify-between overflow-y-auto">
+<!-- Headers -->
+<div class="flex flex-col gap-stack-gap-sm text-center mb-stack-gap-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">
+                Snap your food. Know what's in it.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant px-4">
+                AI-powered nutrition for the Indian plate.
+            </p>
+</div>
+<!-- Value Props - Bento Style List -->
+<div class="flex flex-col gap-stack-gap-md mb-stack-gap-lg">
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-item-radius ambient-shadow transform transition-transform hover:scale-[1.02]">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">
+                    Indian nutrition that works
+                </div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-item-radius ambient-shadow transform transition-transform hover:scale-[1.02]">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">kitchen</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">
+                    Recipes from your fridge
+                </div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-item-radius ambient-shadow transform transition-transform hover:scale-[1.02]">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">
+                    Order ingredients on Instamart
+                </div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="mt-auto pt-4 pb-safe-area-bottom">
+<button class="w-full py-4 bg-primary-container text-surface-container-lowest rounded-full font-headline-md text-headline-md shadow-[0_8px_24px_-4px_rgba(252,128,25,0.4)] transform transition-all active:scale-95 hover:bg-opacity-90 flex items-center justify-center gap-2">
+                Get started
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

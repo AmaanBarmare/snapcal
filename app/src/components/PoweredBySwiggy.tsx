@@ -1,12 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors, radius, spacing } from "@/lib/theme";
+import { colors, radius, shadow, spacing, type } from "@/lib/theme";
 
 export default function PoweredBySwiggy({ compact = false }: { compact?: boolean }) {
   return (
-    <View style={[styles.wrap, compact && styles.compact]}>
-      <View style={styles.dot} />
+    <View style={[styles.wrap, compact && styles.compact, shadow.ambient]}>
+      <View style={styles.monogram}>
+        <Text style={styles.monogramText}>S</Text>
+      </View>
       <Text style={styles.label}>Powered by Swiggy</Text>
     </View>
   );
@@ -16,27 +18,35 @@ const styles = StyleSheet.create({
   wrap: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xs,
-    backgroundColor: colors.brandAccentSoft,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 6,
+    gap: spacing.sm,
+    backgroundColor: colors.surfaceContainerLowest,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    alignSelf: "flex-start",
+    alignSelf: "center",
   },
   compact: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.brandAccent,
+  monogram: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: colors.primaryContainer,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  monogramText: {
+    color: colors.onPrimary,
+    fontSize: 10,
+    fontWeight: "800",
   },
   label: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.brandAccent,
-    letterSpacing: 0.3,
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
+    letterSpacing: 0.8,
+    textTransform: "none",
+    fontSize: 11,
   },
 });

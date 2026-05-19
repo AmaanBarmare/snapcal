@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>SnapCal - Camera</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#984800",
+                        "inverse-primary": "#ffb689",
+                        "inverse-surface": "#3b2e26",
+                        "secondary-fixed": "#f8dec5",
+                        "primary-container": "#fc8019",
+                        "primary": "#984800",
+                        "surface-container-highest": "#f4ded3",
+                        "secondary": "#6e5b48",
+                        "on-surface": "#241912",
+                        "on-primary-fixed-variant": "#733500",
+                        "surface-dim": "#ebd6ca",
+                        "on-tertiary-container": "#003d59",
+                        "outline": "#8b7264",
+                        "tertiary-fixed": "#c8e6ff",
+                        "surface-container-high": "#fae4d8",
+                        "on-tertiary-fixed-variant": "#004c6d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#74614d",
+                        "surface-container-low": "#fff1ea",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#f4ded3",
+                        "tertiary": "#006590",
+                        "on-surface-variant": "#574236",
+                        "tertiary-container": "#00adf3",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#dbc2ab",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffdbc8",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#311300",
+                        "on-secondary-fixed": "#26190a",
+                        "surface": "#fff8f5",
+                        "on-primary-container": "#5e2a00",
+                        "surface-bright": "#fff8f5",
+                        "secondary-container": "#f8dec5",
+                        "on-background": "#241912",
+                        "on-tertiary-fixed": "#001e2e",
+                        "background": "#fff8f5",
+                        "tertiary-fixed-dim": "#87ceff",
+                        "outline-variant": "#dec1b0",
+                        "inverse-on-surface": "#ffede4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ffeadf",
+                        "primary-fixed-dim": "#ffb689",
+                        "on-secondary-fixed-variant": "#554432"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-margin": "20px",
+                        "stack-gap-lg": "24px",
+                        "container-padding": "20px",
+                        "stack-gap-sm": "8px",
+                        "item-radius": "16px",
+                        "stack-gap-md": "16px"
+                    },
+                    "fontFamily": {
+                        "macro-number": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-calories": ["Plus Jakarta Sans"],
+                        "label-caps": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "macro-number": ["18px", {"lineHeight": "22px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "700"}],
+                        "body-lg": ["17px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["15px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-calories": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background h-screen w-full overflow-hidden text-on-surface antialiased select-none touch-none">
+<div class="absolute inset-0 z-0 bg-cover bg-center" data-alt="A highly realistic photo taken from a first-person smartphone camera perspective, looking straight down at a modern, warm Indian kitchen counter. The surface is a lightly speckled, warm off-white granite. In the center rests a pristine white ceramic plate holding a freshly prepared Indian meal—a generous portion of aromatic basmati rice alongside a rich, textured dal and a vibrant green sabzi. Soft, natural daylight from an unseen window creates gentle highlights and shadows, emphasizing the appetizing textures of the food. The overall mood is modern, warm, and inviting, perfectly matching a premium food-tech application's clean aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDPnyNlzSPm6Q-H4H4ItlIjg9VKrQCzplf_bM9BalaSRWF6POvhljWlCiCUz7Oq5EF0PC5EY4AjVYqPeMqxR2izSkngBcUvcXHIXE8yB3F55UqgvmwMva0Ax89Q8iZWsBUsc-ldKoRpceReqAFhxD0mU-4k30aJ2khYSkoYMjiaswpcVXefIirby5cBkgoV-2n8v65AiPyenhyDN23Ri3_CXKXStqds5iOhuxcD8nu2yjQ-rzu25Cg6X896Sbl_mmPsI6QegtvUs68');">
+<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none"></div>
+</div>
+<div class="absolute inset-0 z-10 pointer-events-none flex flex-col justify-evenly opacity-30">
+<div class="w-full h-px bg-white"></div>
+<div class="w-full h-px bg-white"></div>
+</div>
+<div class="absolute inset-0 z-10 pointer-events-none flex justify-evenly opacity-30">
+<div class="h-full w-px bg-white"></div>
+<div class="h-full w-px bg-white"></div>
+</div>
+<div class="absolute top-0 w-full z-20 pt-12 flex justify-center px-grid-margin">
+<div class="flex items-center bg-surface-container-highest/80 backdrop-blur-md rounded-full p-1 shadow-md">
+<button class="px-6 py-2 rounded-full font-label-caps text-label-caps text-on-surface-variant transition-colors hover:bg-surface-container-high/50">Fridge</button>
+<button class="px-6 py-2 rounded-full font-label-caps text-label-caps bg-primary-container text-on-primary font-bold shadow-sm transition-colors">Meal</button>
+</div>
+</div>
+<div class="absolute bottom-[110px] w-full z-20 flex flex-col items-center gap-stack-gap-md pb-4">
+<span class="font-body-md text-body-md text-surface-container-lowest bg-black/50 backdrop-blur-sm px-5 py-2 rounded-full shadow-sm drop-shadow-md tracking-wide">Point at your food</span>
+<button class="w-20 h-20 rounded-full border-[5px] border-surface-container-lowest/80 flex items-center justify-center p-1 active:scale-95 transition-transform duration-150 group">
+<div class="w-full h-full rounded-full bg-surface-container-lowest group-active:bg-surface-container-low transition-colors shadow-lg"></div>
+</button>
+</div>
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-surface shadow-[0_-4px_16px_0_rgba(0,0,0,0.04)] rounded-t-xl md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]">calendar_today</span>
+<span class="font-label-caps text-label-caps mt-1">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+<span class="font-label-caps text-label-caps mt-1">Snap</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 hover:bg-surface-container-high transition-all scale-110 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]">history</span>
+<span class="font-label-caps text-label-caps mt-1">History</span>
+</button>
+</nav>
+</body></html>
