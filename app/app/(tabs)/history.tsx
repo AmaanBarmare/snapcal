@@ -10,7 +10,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AppHeader from "@/components/AppHeader";
+import Button from "@/components/Button";
 import Card from "@/components/Card";
+import MealListCard from "@/components/MealListCard";
 import { getHistory } from "@/lib/api";
 import { colors, spacing, type } from "@/lib/theme";
 
@@ -27,14 +29,24 @@ interface Item {
 export default function HistoryScreen() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
       setLoading(true);
+      setError(null);
       getHistory(14)
         .then((r) => {
           if (!cancelled) setItems(r.meals);
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setError(
+              "Can't reach the SnapCal backend. Make sure it's running on port 8000 and your phone is on the same Wi‑Fi."
+            );
+          }
         })
         .finally(() => {
           if (!cancelled) setLoading(false);
@@ -42,13 +54,25 @@ export default function HistoryScreen() {
       return () => {
         cancelled = true;
       };
-    }, [])
+    }, [reloadKey])
   );
 
   if (loading) {
     return (
       <SafeAreaView style={styles.center} edges={["top"]}>
         <ActivityIndicator color={colors.primaryContainer} />
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.center} edges={["top"]}>
+        <Card style={styles.errorCard}>
+          <Text style={styles.errorTitle}>Backend unreachable</Text>
+          <Text style={styles.errorBody}>{error}</Text>
+          <Button label="Retry" onPress={() => setReloadKey((k) => k + 1)} />
+        </Card>
       </SafeAreaView>
     );
   }
@@ -82,27 +106,7 @@ export default function HistoryScreen() {
             <View key={day} style={{ marginTop: spacing.lg }}>
               <Text style={styles.day}>{day}</Text>
               {list.map((m) => (
-                <Card key={m.id} style={styles.mealCard}>
-                  <View style={styles.mealThumb}>
-                    <Text style={{ fontSize: 24 }}>🍽</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.dish}>{m.dishName}</Text>
-                    <Text style={styles.meta}>
-                      {new Date(m.timestamp).toLocaleTimeString("en-IN", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                      {" · "}
-                      {m.source === "mode1" ? "FridgeScan" : "Meal Snap"}
-                      {m.isPlanned ? " · planned" : ""}
-                    </Text>
-                  </View>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <Text style={styles.kcal}>{Math.round(m.calories)}</Text>
-                    <Text style={styles.kcalLabel}>kcal</Text>
-                  </View>
-                </Card>
+                <MealListCard key={m.id} meal={m} />
               ))}
             </View>
           ))
@@ -122,6 +126,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: spacing.gridMargin,
+  },
+  errorCard: {
+    width: "100%",
+    alignItems: "center",
+    gap: spacing.md,
+    paddingVertical: spacing.xxl,
+  },
+  errorTitle: {
+    ...type.headlineMd,
+    color: colors.onSurface,
+  },
+  errorBody: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    textAlign: "center",
   },
   scroll: {
     paddingHorizontal: spacing.gridMargin,
@@ -137,41 +157,6 @@ const styles = StyleSheet.create({
     ...type.labelCaps,
     color: colors.onSurfaceVariant,
     marginBottom: spacing.sm,
-  },
-  mealCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.md,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  mealThumb: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: colors.surfaceContainerLow,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dish: {
-    ...type.headlineMd,
-    fontSize: 16,
-    color: colors.onSurface,
-  },
-  meta: {
-    ...type.bodyMd,
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
-    marginTop: 2,
-  },
-  kcal: {
-    ...type.macroNumber,
-    color: colors.primaryContainer,
-  },
-  kcalLabel: {
-    ...type.labelCaps,
-    fontSize: 10,
-    color: colors.onSurfaceVariant,
   },
   empty: {
     alignItems: "center",

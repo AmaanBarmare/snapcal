@@ -18,7 +18,10 @@
       "bundleIdentifier": "ai.oltaflock.snapcal",
       "infoPlist": {
         "NSCameraUsageDescription": "SnapCal uses the camera to identify food and read your fridge contents.",
-        "NSPhotoLibraryUsageDescription": "SnapCal uses photos to identify meals from your library."
+        "NSPhotoLibraryUsageDescription": "SnapCal uses photos to identify meals from your library.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
       }
     },
     "android": {

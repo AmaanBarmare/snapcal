@@ -2,47 +2,43 @@ import { useFocusEffect, router } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   RefreshControl,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AppHeader from "@/components/AppHeader";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import MacroMiniRing from "@/components/MacroMiniRing";
-import PoweredBySwiggy from "@/components/PoweredBySwiggy";
+import MealListCard from "@/components/MealListCard";
 import Ring from "@/components/Ring";
-import { DashboardTodayResponse, getToday } from "@/lib/api";
+import { DashboardTodayResponse, deleteMeal, getToday } from "@/lib/api";
+import { getMealKind } from "@/lib/mealKind";
 import { colors, radius, spacing, type } from "@/lib/theme";
 import { useSessionStore } from "@/store/sessionStore";
-
-function formatTime(ts: string): string {
-  const d = new Date(ts);
-  return d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
-}
-
-function mealPeriod(ts: string): string {
-  const h = new Date(ts).getHours();
-  if (h < 11) return "BREAKFAST";
-  if (h < 16) return "LUNCH";
-  if (h < 18) return "SNACK";
-  return "DINNER";
-}
 
 export default function TodayScreen() {
   const { onboardedAt, hydrating } = useSessionStore();
   const [today, setToday] = useState<DashboardTodayResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     try {
+      setError(null);
       const data = await getToday();
       setToday(data);
+    } catch {
+      setError(
+        "Can't reach the SnapCal backend. Make sure it's running on port 8000 and your phone is on the same Wi‑Fi."
+      );
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -62,10 +58,53 @@ export default function TodayScreen() {
     }, [load])
   );
 
-  if (loading || !today) {
+  const confirmDelete = useCallback(
+    (mealId: number, dishName: string) => {
+      Alert.alert(
+        "Remove from Today?",
+        `Remove "${dishName}" from today's log?`,
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Remove",
+            style: "destructive",
+            onPress: async () => {
+              setDeletingId(mealId);
+              try {
+                await deleteMeal(mealId);
+                await load();
+              } catch {
+                Alert.alert(
+                  "Couldn't remove",
+                  "Check that the backend is running and try again."
+                );
+              } finally {
+                setDeletingId(null);
+              }
+            },
+          },
+        ]
+      );
+    },
+    [load]
+  );
+
+  if (loading) {
     return (
       <SafeAreaView style={styles.center} edges={["top"]}>
         <ActivityIndicator color={colors.primaryContainer} />
+      </SafeAreaView>
+    );
+  }
+
+  if (error || !today) {
+    return (
+      <SafeAreaView style={styles.center} edges={["top"]}>
+        <Card style={styles.errorCard}>
+          <Text style={styles.errorTitle}>Backend unreachable</Text>
+          <Text style={styles.errorBody}>{error ?? "Something went wrong."}</Text>
+          <Button label="Retry" onPress={() => { setLoading(true); load(); }} />
+        </Card>
       </SafeAreaView>
     );
   }
@@ -133,6 +172,9 @@ export default function TodayScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>Today's meals</Text>
+        <Text style={styles.sectionHint}>
+          Swipe left on a card to delete · FridgeScan = planned · Meal Snap = logged
+        </Text>
 
         {today.meals.length === 0 ? (
           <Card style={styles.empty}>
@@ -147,28 +189,43 @@ export default function TodayScreen() {
             />
           </Card>
         ) : (
-          today.meals.map((m) => (
-            <Card key={m.id} style={styles.mealCard}>
-              <View style={styles.mealThumb}>
-                <Text style={styles.mealThumbEmoji}>🍽</Text>
-              </View>
-              <View style={styles.mealBody}>
-                <Text style={styles.mealMeta}>
-                  {mealPeriod(m.timestamp)} • {formatTime(m.timestamp)}
-                </Text>
-                <Text style={styles.mealName} numberOfLines={2}>
-                  {m.dishName}
-                </Text>
-                {m.source === "mode1" || m.swiggyOrderId ? (
-                  <PoweredBySwiggy compact />
-                ) : null}
-              </View>
-              <View style={styles.mealKcal}>
-                <Text style={styles.mealKcalNum}>{Math.round(m.calories)}</Text>
-                <Text style={styles.mealKcalUnit}>kcal</Text>
-              </View>
-            </Card>
-          ))
+          <>
+            {today.meals.some((m) => getMealKind(m) === "fridgescan") ? (
+              <Text style={styles.subsectionTitle}>Planned (FridgeScan)</Text>
+            ) : null}
+            {today.meals
+              .filter((m) => getMealKind(m) === "fridgescan")
+              .map((m) => (
+                <MealListCard
+                  key={m.id}
+                  meal={m}
+                  onDelete={() => confirmDelete(m.id, m.dishName)}
+                  deleting={deletingId === m.id}
+                />
+              ))}
+
+            {today.meals.some((m) => getMealKind(m) === "mealsnap") ? (
+              <Text
+                style={[
+                  styles.subsectionTitle,
+                  today.meals.some((m) => getMealKind(m) === "fridgescan") &&
+                    styles.subsectionTitleSpaced,
+                ]}
+              >
+                Logged (Meal Snap)
+              </Text>
+            ) : null}
+            {today.meals
+              .filter((m) => getMealKind(m) === "mealsnap")
+              .map((m) => (
+                <MealListCard
+                  key={m.id}
+                  meal={m}
+                  onDelete={() => confirmDelete(m.id, m.dishName)}
+                  deleting={deletingId === m.id}
+                />
+              ))}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -185,6 +242,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: spacing.gridMargin,
+  },
+  errorCard: {
+    width: "100%",
+    alignItems: "center",
+    gap: spacing.md,
+    paddingVertical: spacing.xxl,
+  },
+  errorTitle: {
+    ...type.headlineMd,
+    color: colors.onSurface,
+  },
+  errorBody: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    textAlign: "center",
   },
   scroll: {
     paddingHorizontal: spacing.gridMargin,
@@ -221,7 +294,22 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...type.headlineMd,
     color: colors.onSurface,
+    marginBottom: spacing.sm,
+  },
+  sectionHint: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
     marginBottom: spacing.lg,
+    lineHeight: 20,
+  },
+  subsectionTitle: {
+    ...type.labelCaps,
+    color: colors.onSurfaceVariant,
+    fontSize: 11,
+    marginBottom: spacing.sm,
+  },
+  subsectionTitleSpaced: {
+    marginTop: spacing.lg,
   },
   empty: {
     alignItems: "center",
@@ -236,50 +324,5 @@ const styles = StyleSheet.create({
     color: colors.onSurfaceVariant,
     textAlign: "center",
     marginTop: spacing.sm,
-  },
-  mealCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.lg,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  mealThumb: {
-    width: 64,
-    height: 64,
-    borderRadius: radius.md,
-    backgroundColor: colors.surfaceContainerLow,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  mealThumbEmoji: {
-    fontSize: 28,
-  },
-  mealBody: {
-    flex: 1,
-    gap: 4,
-  },
-  mealMeta: {
-    ...type.labelCaps,
-    color: colors.onSurfaceVariant,
-    fontSize: 10,
-  },
-  mealName: {
-    ...type.headlineMd,
-    color: colors.onSurface,
-    fontSize: 18,
-  },
-  mealKcal: {
-    alignItems: "flex-end",
-  },
-  mealKcalNum: {
-    ...type.macroNumber,
-    color: colors.primaryContainer,
-    fontSize: 20,
-  },
-  mealKcalUnit: {
-    ...type.labelCaps,
-    color: colors.onSurfaceVariant,
-    fontSize: 10,
   },
 });

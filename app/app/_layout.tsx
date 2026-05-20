@@ -54,6 +54,8 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="profile" options={{ presentation: "modal" }} />
+          <Stack.Screen name="settings" options={{ presentation: "modal" }} />
           <Stack.Screen name="onboarding" options={{ presentation: "modal" }} />
           <Stack.Screen name="result/meal" options={{ presentation: "card" }} />
           <Stack.Screen name="result/fridge" options={{ presentation: "card" }} />

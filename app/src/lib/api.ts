@@ -1,15 +1,41 @@
 /**
  * Backend API client.
  *
- * Reads base URL from EXPO_PUBLIC_API_URL. On a real phone over Expo Go
- * you'll want to set this to your laptop's LAN IP (e.g.
- * EXPO_PUBLIC_API_URL=http://192.168.1.42:8000).
+ * In Expo Go dev, the base URL is derived from the Metro bundler host so it
+ * always matches the LAN IP your phone already uses for the QR code. Override
+ * with EXPO_PUBLIC_API_URL for production or fixed staging hosts.
  */
 
+import Constants from "expo-constants";
 import axios from "axios";
+import { Platform } from "react-native";
 
-const baseURL =
-  process.env.EXPO_PUBLIC_API_URL?.trim() || "http://localhost:8000";
+const BACKEND_PORT = "8000";
+
+function resolveApiBaseUrl(): string {
+  const fromEnv = process.env.EXPO_PUBLIC_API_URL?.trim();
+
+  // Expo Go dev: reuse the same host Metro is served from (e.g. 192.168.1.22).
+  if (__DEV__ && Platform.OS !== "web") {
+    const hostUri = Constants.expoConfig?.hostUri;
+    if (hostUri) {
+      const host = hostUri.split(":")[0];
+      return `http://${host}:${BACKEND_PORT}`;
+    }
+  }
+
+  if (fromEnv) {
+    return fromEnv.replace(/\/$/, "");
+  }
+
+  if (Platform.OS === "android") {
+    return `http://10.0.2.2:${BACKEND_PORT}`;
+  }
+
+  return `http://localhost:${BACKEND_PORT}`;
+}
+
+const baseURL = resolveApiBaseUrl();
 
 export const api = axios.create({
   baseURL,
@@ -184,6 +210,26 @@ export interface DashboardMeal {
   isPlanned: boolean;
 }
 
+export interface UserProfileResponse {
+  userId: number;
+  displayName: string;
+  email: string;
+  goal: "lose" | "maintain" | "gain";
+  weightKg: number;
+  activityLevel: "sedentary" | "lightly_active" | "very_active";
+  onboarded: boolean;
+  onboardedAt: string | null;
+  targets: {
+    calories: number;
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+  };
+  stats: {
+    mealsLogged: number;
+  };
+}
+
 export interface DashboardTodayResponse {
   date: string;
   onboarded: boolean;
@@ -265,6 +311,20 @@ export async function postMealLog(meal: {
 }) {
   const r = await api.post("/api/meallog", { user_id: 1, ...meal });
   return r.data as { id: number; timestamp: string };
+}
+
+export async function deleteMeal(mealId: number) {
+  const r = await api.delete(`/api/meallog/${mealId}`, {
+    params: { user_id: 1 },
+  });
+  return r.data as { deleted: boolean; id: number };
+}
+
+export async function getProfile() {
+  const r = await api.get<UserProfileResponse>("/api/profile", {
+    params: { user_id: 1 },
+  });
+  return r.data;
 }
 
 export async function getToday() {

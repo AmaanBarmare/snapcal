@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { colors, radius, shadow, spacing, type } from "@/lib/theme";
+import { colors, radius, spacing, type } from "@/lib/theme";
 
 function TabBarIcon({
   label,
@@ -32,39 +32,34 @@ function TabBarIcon({
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const tabBarHeight = 64 + insets.bottom;
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        // Default tab buttons — custom Pressable wrappers broke layout on iOS (SDK 54).
         tabBarStyle: {
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 72 + insets.bottom,
-          paddingBottom: insets.bottom + 8,
-          paddingTop: 12,
-          paddingHorizontal: spacing.lg,
+          height: tabBarHeight,
+          paddingTop: 8,
+          paddingBottom: insets.bottom,
+          paddingHorizontal: spacing.sm,
           backgroundColor: colors.surface,
-          borderTopWidth: 0,
-          borderTopLeftRadius: radius.xl,
-          borderTopRightRadius: radius.xl,
-          ...shadow.tabBar,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: colors.outlineVariant,
+          ...Platform.select({
+            ios: {
+              shadowColor: "#000",
+              shadowOpacity: 0.08,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: -2 },
+            },
+            android: { elevation: 12 },
+          }),
         },
-        tabBarButton: (props) => {
-          const { ref, ...rest } = props;
-          return (
-            <Pressable
-              {...rest}
-              style={({ pressed }) => [
-                props.style,
-                { flex: 1, alignItems: "center", justifyContent: "center" },
-                pressed && { opacity: 0.85 },
-              ]}
-            />
-          );
+        tabBarItemStyle: {
+          paddingVertical: 0,
         },
       }}
     >
@@ -105,16 +100,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.secondaryContainer,
     borderRadius: radius.pill,
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     gap: 2,
+    minWidth: 72,
   },
   tabInactive: {
     flexDirection: "column",
     alignItems: "center",
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     gap: 2,
+    minWidth: 72,
   },
   tabGlyphActive: {
     fontSize: 22,
@@ -126,11 +123,11 @@ const styles = StyleSheet.create({
   tabLabelActive: {
     ...type.labelCaps,
     color: colors.onSecondaryContainer,
-    fontSize: 11,
+    fontSize: 10,
   },
   tabLabel: {
     ...type.labelCaps,
     color: colors.onSurfaceVariant,
-    fontSize: 11,
+    fontSize: 10,
   },
 });

@@ -1,3 +1,4 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -24,6 +25,7 @@ export default function SnapScreen() {
   const camRef = useRef<CameraView | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const tabBarHeight = useBottomTabBarHeight();
 
   async function onShutter() {
     if (busy || !camRef.current) return;
@@ -113,7 +115,10 @@ export default function SnapScreen() {
         </View>
       </SafeAreaView>
 
-      <View style={styles.bottomControls} pointerEvents="box-none">
+      <View
+        style={[styles.bottomControls, { bottom: tabBarHeight + spacing.lg }]}
+        pointerEvents="box-none"
+      >
         <Text style={styles.hint}>
           {mode === "meal" ? "Point at your food" : "Open the fridge fully"}
         </Text>
@@ -234,7 +239,6 @@ const styles = StyleSheet.create({
 
   bottomControls: {
     position: "absolute",
-    bottom: 110,
     left: 0,
     right: 0,
     alignItems: "center",

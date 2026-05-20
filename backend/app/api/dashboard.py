@@ -73,6 +73,24 @@ def onboarding(payload: OnboardingBody, db: Session = Depends(get_session)) -> d
     }
 
 
+@router.delete("/meallog/{meal_id}")
+def delete_meal(
+    meal_id: int,
+    user_id: int = Query(default=1),
+    db: Session = Depends(get_session),
+) -> dict:
+    row = (
+        db.query(MealLog)
+        .filter(MealLog.id == meal_id, MealLog.user_id == user_id)
+        .first()
+    )
+    if row is None:
+        raise HTTPException(status_code=404, detail="Meal not found")
+    db.delete(row)
+    db.commit()
+    return {"deleted": True, "id": meal_id}
+
+
 @router.post("/meallog")
 def log_meal(payload: MealLogBody, db: Session = Depends(get_session)) -> dict:
     row = MealLog(
@@ -100,6 +118,37 @@ def _day_bounds(now: datetime) -> tuple[datetime, datetime]:
     start = datetime.combine(now.date(), time.min)
     end = start + timedelta(days=1)
     return start, end
+
+
+@router.get("/profile")
+def profile(user_id: int = Query(default=1), db: Session = Depends(get_session)) -> dict:
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    meals_logged = (
+        db.query(MealLog).filter(MealLog.user_id == user_id).count()
+    )
+
+    return {
+        "userId": user.id,
+        "displayName": "Demo User",
+        "email": user.email,
+        "goal": user.goal,
+        "weightKg": user.weight_kg,
+        "activityLevel": user.activity_level,
+        "onboarded": user.onboarded_at is not None,
+        "onboardedAt": user.onboarded_at.isoformat() if user.onboarded_at else None,
+        "targets": {
+            "calories": user.daily_calorie_target,
+            "proteinG": user.daily_protein_target_g,
+            "carbsG": user.daily_carbs_target_g,
+            "fatG": user.daily_fat_target_g,
+        },
+        "stats": {
+            "mealsLogged": meals_logged,
+        },
+    }
 
 
 @router.get("/dashboard/today")
