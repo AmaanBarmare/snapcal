@@ -61,6 +61,16 @@ class VisionAdapter(Protocol):
 # Mock implementation
 # ----------------------------------------------------------------------------
 
+# High-res phone photos of packaged food (e.g. frozen pizza box) exceed this length.
+_DEMO_PACKAGED_MEAL_MIN_B64_LEN = 200_000
+
+_MOCK_MUSHROOM_PIZZA = DishGuess(
+    "Mushroom Pizza",
+    "मशरूम पिज़्ज़ा",
+    398.0,  # 14 oz whole frozen pizza
+    94.0,
+)
+
 _MOCK_MEAL_ROTATION: list[list[DishGuess]] = [
     [DishGuess("Dal Tadka", "दाल तड़का", 180, 92.0)],
     [DishGuess("Masala Dosa", "मसाला डोसा", 150, 88.0)],
@@ -115,6 +125,9 @@ class MockVision:
         return int(h[:8], 16) % rotation_size
 
     def identify_meal(self, image_b64: str) -> list[DishGuess]:
+        # Demo: large meal photos (packaged pizza box) → single whole-pizza identification.
+        if len(image_b64) >= _DEMO_PACKAGED_MEAL_MIN_B64_LEN:
+            return [_MOCK_MUSHROOM_PIZZA]
         idx = self._pick(image_b64, len(_MOCK_MEAL_ROTATION))
         return list(_MOCK_MEAL_ROTATION[idx])
 
@@ -129,12 +142,17 @@ class MockVision:
 
 _MEAL_SYSTEM_PROMPT = (
     "You are analysing a photo of food. Identify the dish(es) visible. "
-    "Prioritise Indian dishes. For each dish return: name_english, name_hindi "
-    "(if applicable), serving_grams (visual estimate of weight in grams), "
-    "confidence (0-100). If multiple dishes (e.g. thali), list each separately "
-    "(max 3). Return ONLY JSON of shape: "
+    "Prioritise Indian dishes, but also recognise packaged or Western foods "
+    "(frozen pizza, burgers, etc.). For packaged items with a visible net weight "
+    "(e.g. 14 OZ / 398 g), use that as serving_grams for the ENTIRE package — "
+    "not a single slice. For a whole frozen pizza, return ONE dish only "
+    "(e.g. Mushroom Pizza) with the full package weight. "
+    "For each dish return: name_english, name_hindi (if applicable), "
+    "serving_grams (grams for the full portion being logged), confidence (0-100). "
+    "If multiple separate dishes on one plate (e.g. thali), list each (max 3). "
+    "Return ONLY JSON of shape: "
     '{"dishes": [{"name_english": "...", "name_hindi": "...", '
-    '"serving_grams": 180, "confidence": 88}]}'
+    '"serving_grams": 398, "confidence": 88}]}'
 )
 
 _FRIDGE_SYSTEM_PROMPT = (

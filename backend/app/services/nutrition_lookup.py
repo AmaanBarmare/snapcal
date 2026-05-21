@@ -17,7 +17,7 @@ CATEGORY_FALLBACK = {
     "dal_curry": "IND_099",  # Generic North Indian Curry
     "rice": "IND_045",  # Plain Rice
     "breakfast": "IND_100",  # Generic South Indian Tiffin
-    "swiggy_common": "IND_097",  # Thali
+    "swiggy_common": "IND_097",  # Thali (generic; pizza queries match IND_101 first)
     "protein": "IND_069",  # Chicken Curry
     "snacks_street": "IND_059",  # Bhel Puri
     "roti_bread": "IND_038",  # Roti

@@ -10,6 +10,8 @@ from app.services.nutrition_lookup import lookup_dish
 
 def _category_for(name: str) -> str | None:
     n = name.lower()
+    if "mushroom" in n and "pizza" in n:
+        return "swiggy_common"
     if any(t in n for t in ("biryani", "pizza", "burger", "noodle", "manchurian")):
         return "swiggy_common"
     if any(t in n for t in ("dosa", "idli", "upma", "poha", "paratha", "thepla", "vada")):

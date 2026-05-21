@@ -57,8 +57,13 @@ export default function MealResultScreen() {
   const fatG = swiggyMatch?.fatG ?? n?.per_serving.fat_g ?? 0;
   const fibreG = n?.per_serving.fibre_g ?? 0;
   const servingGrams = swiggyMatch?.servingGrams ?? n?.serving.grams ?? v.serving_grams;
+  const servingUnit = n?.serving.unit;
   const dishName = swiggyMatch?.name ?? v.name_english;
   const confidence = v.confidence;
+  const servingLabel =
+    servingUnit === "whole pizza"
+      ? `Entire pizza · ${Math.round(servingGrams)} g`
+      : `${Math.round(servingGrams)} g serving`;
 
   async function logMeal() {
     if (logged || logging) return;
@@ -109,11 +114,12 @@ export default function MealResultScreen() {
           <Text style={styles.confLabel}>
             {confidence >= 80 ? "High confidence match" : "Medium confidence match"}
           </Text>
+          <Text style={styles.servingLabel}>{servingLabel}</Text>
         </View>
 
         <Card style={styles.nutritionCard}>
           <Text style={styles.kcal}>{Math.round(calories)}</Text>
-          <Text style={styles.kcalUnit}>kcal</Text>
+          <Text style={styles.kcalUnit}>kcal · entire meal</Text>
 
           <View style={styles.macroRow}>
             <MacroMiniRing
@@ -241,6 +247,12 @@ const styles = StyleSheet.create({
     ...type.bodyMd,
     color: colors.onSurfaceVariant,
     marginTop: spacing.xs,
+  },
+  servingLabel: {
+    ...type.bodyMd,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.xs,
+    fontWeight: "600",
   },
   nutritionCard: {
     alignItems: "center",
