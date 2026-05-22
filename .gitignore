@@ -57,6 +57,9 @@ android/build/
 *.swo
 Thumbs.db
 
+# --- Office temp / lock files (created when a deck/doc is open) ---
+~$*
+
 # --- Cursor / Claude / AI tooling artifacts ---
 .cursor/
 
